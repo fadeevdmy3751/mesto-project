@@ -1,0 +1,16 @@
+.form__field {
+  font-family: inherit;
+  width: 100%;
+  margin-bottom: 30px;
+  /*padding: 0 0 13px; не совпадает с макетом !%№!*/
+  padding: 0 0 8px;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  font-size: 14px;
+  line-height: 17px;
+}
+
+.form__field:focus {
+  outline: 2px solid black;
+  outline-offset: 5px;
+}

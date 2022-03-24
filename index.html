@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="ie=edge" http-equiv="X-UA-Compatible">
+  <meta content="Страница с проектом Mesto" name="description">
+  <meta content="Yandex, Practicum, Web, HTML5, CSS" name="keywords">
+  <meta content="Дмитрий Фадеев" name="author">
+  <title>Mesto</title>
+  <link href="pages/index.css" rel="stylesheet">
+</head>
+
+<body class="page">
+<header class="header">
+  <h1 class="header__logo"><img alt="Mesto Russia" class="header__logo" src="images/logo.svg"></h1>
+</header>
+<main class="content">
+  <input class="invisible-checkbox" id="form-display" type="checkbox"> <!--чтобы открывать и закрывать попап, без js-->
+  <section class="popup">
+    <form action="" class="form" name="popup-form">
+      <!--      <fieldset class="form">-->
+      <h2 class="form__header">Редактировать профиль</h2>
+      <input class="form__field" id="form__field-name" name="name" placeholder="Введите имя" required
+             type="text" value="Жак-Ив Кусто">
+      <input class="form__field" id="form__field-profession" name="profession" placeholder="Введите профессию"
+             type="text"
+             value="Исследователь океана">
+      <button class="form__button" type="submit">Сохранить</button>
+      <label class="form__close svg-button" for="form-display"><!--чтобы закрывался по кресту, без js-->
+        <button class="invisible-checkbox" type="reset"></button>
+      </label>
+      <!--      </fieldset>-->
+    </form>
+  </section>
+  <section class="profile">
+    <img alt="Аватар" class="profile__avatar" src="images/kusto.jpg">
+    <div class="profile__info">
+      <h2 class="profile__name">Жак-Ив Кусто
+        <label class="profile__edit-button svg-button" for="form-display">
+          <img alt="редактировать" src="images/Edit_Button.svg">
+        </label>
+      </h2>
+      <p class="profile__description">Исследователь океана</p>
+    </div>
+    <button class="profile__add-button svg-button"></button>
+  </section>
+  <section aria-label="elements" class="elements">
+    <div class="card">
+      <img alt="Карачаевск" class="card__image" src="images/kchr.jpg">
+      <p class="card__name">Карачаевск</p>
+      <label for="heart1">
+        <input class="invisible-checkbox" id="heart1" type="checkbox">
+        <span class="card__like"></span>
+      </label>
+    </div>
+    <div class="card">
+      <img alt="Гора Эльбрус" class="card__image" src="images/elbrus.jpg">
+      <p class="card__name">Гора Эльбрус</p>
+      <label for="heart2">
+        <input class="invisible-checkbox" id="heart2" type="checkbox">
+        <span class="card__like"></span>
+      </label>
+    </div>
+    <div class="card">
+      <img alt="Домбай" class="card__image" src="images/dombay.jpg">
+      <p class="card__name">Домбай</p>
+      <label for="heart3">
+        <input class="invisible-checkbox" id="heart3" type="checkbox">
+        <span class="card__like"></span>
+      </label>
+    </div>
+    <div class="card">
+      <img alt="Гора Эльбрус" class="card__image" src="images/elbrus.jpg">
+      <p class="card__name">Гора Эльбрус</p>
+      <label for="heart4">
+        <input class="invisible-checkbox" id="heart4" type="checkbox">
+        <span class="card__like"></span>
+      </label>
+    </div>
+    <div class="card">
+      <img alt="Домбай" class="card__image" src="images/dombay.jpg">
+      <p class="card__name">Домбай</p>
+      <label for="heart5">
+        <input class="invisible-checkbox" id="heart5" type="checkbox">
+        <span class="card__like"></span>
+      </label>
+    </div>
+    <div class="card">
+      <img alt="Карачаево-черкессия" class="card__image" src="images/kchr2.jpg">
+      <p class="card__name">Карачаево-черкессия</p>
+      <label for="heart6">
+        <input class="invisible-checkbox" id="heart6" type="checkbox">
+        <span class="card__like"></span>
+      </label>
+    </div>
+  </section>
+</main>
+<footer class="footer">
+  <p class="footer__text">© 2020 Mesto Russia</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,11 @@
+.profile__info {
+  color: white;
+}
+
+@media screen and (max-width: 750px) {
+  .profile__info {
+    grid-row: 3;
+    text-align: center;
+    max-width: 288px;
+  }
+}

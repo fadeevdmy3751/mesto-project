@@ -1,0 +1,9 @@
+.svg-button {
+  background: none;
+  border: none;
+}
+
+.svg-button:hover {
+  cursor: pointer;
+  opacity: 0.6;
+}
