@@ -1,7 +1,7 @@
 .form {
   position: relative;
   width: 430px;
-  height: 330px;
+  min-height: 330px;
   background: white;
   box-shadow: 0 0 25px rgba(0, 0, 0, 0.15);
   border: none;
@@ -15,7 +15,7 @@
 @media screen and (max-width: 750px) {
   .form {
     width: 282px;
-    height: 322px;
+    min-height: 322px;
     padding: 25px 22px;
   }
 }

@@ -1,14 +1,19 @@
 .profile__edit-button {
+  background-image: url(../../../images/Edit_Button.svg);
   display: inline-block;
-  margin-left: calc(18px - .4em);
+  grid-row: 1;
+  grid-column: 2;
+  justify-self: start;
+  margin-left: 18px;
   height: 24px;
   width: 24px;
 }
 
 @media screen and (max-width: 750px) {
   .profile__edit-button {
-    position: absolute;
     width: 18px;
     height: 18px;
+    grid-row: 1;
+    grid-column: 3;
   }
 }
