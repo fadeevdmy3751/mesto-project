@@ -13,69 +13,69 @@
 </head>
 
 <body class="page">
-<header class="header">
-  <img alt="Mesto Russia" class="header__logo" src="images/logo.svg">
-</header>
-<main class="content">
-  <section class="profile">
-    <img alt="Аватар" class="profile__avatar" src="images/kusto.jpg">
-    <div class="profile__info">
-      <!--      <h1 class="profile__name">Жак-Ив Ку сто Жак-Ив Ку сто Жак-Ив КустоЖак-Ив КустоЖак-Ив КустоЖак-Ив Кусто</h1>-->
-      <h1 class="profile__name">Жак-Ив Кусто</h1>
-      <button aria-label="редактировать" class="button profile__edit-button" type="button"></button>
-      <p class="profile__description">Исследователь океана</p>
-      <!--      <p class="profile__description">Исследователь океана Исследователь океана Исследователь океана Исследователь океана Исследователь океана</p>-->
-    </div>
-    <button class="profile__add-button button" type="button"></button>
+  <header class="header">
+    <img alt="Место Россия" class="header__logo" src="images/logo.svg">
+  </header>
+  <main class="content">
+    <section class="profile">
+      <img alt="Аватар" class="profile__avatar" src="images/kusto.jpg">
+      <div class="profile__info">
+        <!--      <h1 class="profile__name">Жак-Ив Ку сто Жак-Ив Ку сто Жак-Ив КустоЖак-Ив КустоЖак-Ив КустоЖак-Ив Кусто</h1>-->
+        <h1 class="profile__name">Жак-Ив Кусто</h1>
+        <button aria-label="редактировать" class="button profile__edit-button" type="button"></button>
+        <p class="profile__description">Исследователь океана</p>
+        <!--      <p class="profile__description">Исследователь океана Исследователь океана Исследователь океана Исследователь океана Исследователь океана</p>-->
+      </div>
+      <button class="profile__add-button button" type="button"></button>
+    </section>
+    <section aria-label="elements" class="elements">
+      <div class="card">
+        <img alt="Карачаевск" class="card__image" src="images/kchr.jpg">
+        <h2 class="card__name">Карачаевск</h2>
+        <button class="card__like" id="heart1" type="button"></button>
+      </div>
+      <div class="card">
+        <img alt="Гора Эльбрус" class="card__image" src="images/elbrus.jpg">
+        <h2 class="card__name">Гора Эльбрус</h2>
+        <button class="card__like" id="heart2" type="button"></button>
+      </div>
+      <div class="card">
+        <img alt="Домбай" class="card__image" src="images/dombay.jpg">
+        <h2 class="card__name">Домбай</h2>
+        <button class="card__like" id="heart3" type="button"></button>
+      </div>
+      <div class="card">
+        <img alt="Гора Эльбрус" class="card__image" src="images/elbrus.jpg">
+        <h2 class="card__name">Гора Эльбрус</h2>
+        <button class="card__like" id="heart4" type="button"></button>
+      </div>
+      <div class="card">
+        <img alt="Домбай" class="card__image" src="images/dombay.jpg">
+        <h2 class="card__name">Домбай</h2>
+        <button class="card__like" id="heart5" type="button"></button>
+      </div>
+      <div class="card">
+        <img alt="Карачаево-черкессия" class="card__image" src="images/kchr2.jpg">
+        <h2 class="card__name">Карачаево-черкессия</h2>
+        <button class="card__like" id="heart6" type="button"></button>
+      </div>
+    </section>
+  </main>
+  <footer class="footer">
+    <p class="footer__text">© 2020 Mesto Russia</p>
+  </footer>
+  <section class="popup">
+    <!--<section class="popup popup_opened">-->
+    <form class="form" name="popup-form">
+      <h2 class="popup__header">Редактировать профиль</h2>
+      <input class="form__field" id="form__field-name" name="name" placeholder="Введите имя" required
+             type="text" value="Жак-Ив Кусто">
+      <input class="form__field" id="form__field-profession" name="profession" placeholder="Введите профессию"
+             type="text"
+             value="Исследователь океана">
+      <button class="form__button" type="submit">Сохранить</button>
+      <button class="popup__close button" type="reset"></button>
+    </form>
   </section>
-  <section aria-label="elements" class="elements">
-    <div class="card">
-      <img alt="Карачаевск" class="card__image" src="images/kchr.jpg">
-      <h2 class="card__name">Карачаевск</h2>
-      <button class="card__like" id="heart1" type="button"></button>
-    </div>
-    <div class="card">
-      <img alt="Гора Эльбрус" class="card__image" src="images/elbrus.jpg">
-      <h2 class="card__name">Гора Эльбрус</h2>
-      <button class="card__like" id="heart2" type="button"></button>
-    </div>
-    <div class="card">
-      <img alt="Домбай" class="card__image" src="images/dombay.jpg">
-      <h2 class="card__name">Домбай</h2>
-      <button class="card__like" id="heart3" type="button"></button>
-    </div>
-    <div class="card">
-      <img alt="Гора Эльбрус" class="card__image" src="images/elbrus.jpg">
-      <h2 class="card__name">Гора Эльбрус</h2>
-      <button class="card__like" id="heart4" type="button"></button>
-    </div>
-    <div class="card">
-      <img alt="Домбай" class="card__image" src="images/dombay.jpg">
-      <h2 class="card__name">Домбай</h2>
-      <button class="card__like" id="heart5" type="button"></button>
-    </div>
-    <div class="card">
-      <img alt="Карачаево-черкессия" class="card__image" src="images/kchr2.jpg">
-      <h2 class="card__name">Карачаево-черкессия</h2>
-      <button class="card__like" id="heart6" type="button"></button>
-    </div>
-  </section>
-</main>
-<footer class="footer">
-  <p class="footer__text">© 2020 Mesto Russia</p>
-</footer>
-<section class="popup">
-  <!--<section class="popup popup_opened">-->
-  <form class="form" name="popup-form">
-    <h2 class="popup__header">Редактировать профиль</h2>
-    <input class="form__field" id="form__field-name" name="name" placeholder="Введите имя" required
-           type="text" value="Жак-Ив Кусто">
-    <input class="form__field" id="form__field-profession" name="profession" placeholder="Введите профессию"
-           type="text"
-           value="Исследователь океана">
-    <button class="form__button" type="submit">Сохранить</button>
-    <button class="form__close button" type="reset"></button>
-  </form>
-</section>
 </body>
 </html>
