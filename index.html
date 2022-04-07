@@ -29,7 +29,7 @@
       <button class="profile__add-button button" type="button"></button>
     </section>
     <section aria-label="elements" class="elements">
-      <div class="card">
+<!--      <div class="card">
         <img alt="Карачаевск" class="card__image" src="images/kchr.jpg">
         <h2 class="card__name">Карачаевск</h2>
         <button class="card__like" id="heart1" type="button"></button>
@@ -58,15 +58,14 @@
         <img alt="Карачаево-черкессия" class="card__image" src="images/kchr2.jpg">
         <h2 class="card__name">Карачаево-черкессия</h2>
         <button class="card__like" id="heart6" type="button"></button>
-      </div>
+      </div>-->
     </section>
   </main>
   <footer class="footer">
     <p class="footer__text">© 2020 Mesto Russia</p>
   </footer>
-  <section class="popup">
-    <!--<section class="popup popup_opened">-->
-    <form class="form" name="popup-form">
+  <div class="popup popup-profile-edit">
+    <form class="form" name="popup-profile-edit-form">
       <h2 class="popup__header">Редактировать профиль</h2>
       <input class="form__field" id="form__field-name" name="name" placeholder="Введите имя" required
              type="text" value="Жак-Ив Кусто">
@@ -74,8 +73,36 @@
              type="text"
              value="Исследователь океана">
       <button class="form__button" type="submit">Сохранить</button>
-      <button class="popup__close button" type="reset"></button>
+      <button class="popup__close popup-profile-edit-close button" type="reset"></button>
     </form>
-  </section>
+  </div>
+  <div class="popup popup-card-add">
+    <form class="form" name="popup-card-add-form">
+      <h2 class="popup__header">Новое место</h2>
+      <input class="form__field" id="card-add-name" name="card-name" placeholder="Название" required
+             type="text" value="">
+      <input class="form__field" id="card-add-link" name="card-link" placeholder="Ссылка на картинку" required
+             type="text"
+             value="">
+      <button class="form__button" type="submit">Создать</button>
+      <button class="popup__close popup-card-add-close button" type="reset"></button>
+    </form>
+  </div>
+  <div class="popup big-img">
+    <figure class="big-img__figure">
+      <img class="big-img__image" src="#" alt="#">
+      <figcaption class = 'big-img__caption'></figcaption>
+      <button class="popup__close big-img-close button" type="reset"></button>
+    </figure>
+  </div>
+  <template id="card-template">
+    <div class="card">
+      <img alt="" class="card__image" src="">
+      <h2 class="card__name"></h2>
+      <button class="card__like" type="button"></button>
+      <button class="card__delete button" type="button"></button>
+    </div>
+  </template>
+  <script src="scripts/script.js"></script>
 </body>
 </html>
