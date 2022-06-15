@@ -12,7 +12,7 @@ const cardAddBtn = content.querySelector('.profile__add-button');
 const cardAddForm = cardAddPopup.querySelector('.form[name="popup-card-add-form"]'); // уточнить класс или name
 const cardNameInput = cardAddPopup.querySelector('#card-add-name');
 const cardLinkInput = cardAddPopup.querySelector('#card-add-link');
-const elements = content.querySelector('.elements');
+const elementsContainer = content.querySelector('.elements');
 const popups = document.querySelectorAll('.popup');
 const popupCloseButtons = document.querySelectorAll('.popup__close')
 
@@ -21,12 +21,12 @@ import  '../pages/index.css';
 import initialCards from './initialCards';
 import {openPopup, closePopup} from './popup.js';
 import {addCard, createCard} from './card.js';
-import {clearPopupInputs, enableValidation} from "./validate.js";
+import {validationParams, clearPopupInputs, enableValidation} from "./validate.js";
 
-initialCards.forEach(el => addCard(createCard(el.name, el.link), elements))
+initialCards.forEach(el => addCard(createCard(el.name, el.link), elementsContainer))
 
 profileEditBtn.addEventListener('click', () => {
-  clearPopupInputs(profileEditPopup);
+  clearPopupInputs(profileEditPopup, validationParams);
   openPopup(profileEditPopup);
   nameInput.value = profileName.textContent;
   descriptionInput.value = profileDescription.textContent;
@@ -40,13 +40,13 @@ profileEditForm.addEventListener('submit', evt => {
 })
 
 cardAddBtn.addEventListener('click', () => {
-  clearPopupInputs(cardAddPopup);
+  clearPopupInputs(cardAddPopup, validationParams);
   openPopup(cardAddPopup);
 })
 
 cardAddForm.addEventListener('submit', evt => {
   evt.preventDefault();
-  addCard(createCard(cardNameInput.value, cardLinkInput.value), elements);
+  addCard(createCard(cardNameInput.value, cardLinkInput.value), elementsContainer);
   closePopup(cardAddPopup);
   cardNameInput.value = '';
   cardLinkInput.value = '';
@@ -64,4 +64,4 @@ popups.forEach(popup => {
   })
 })
 
-enableValidation();
+enableValidation(validationParams);

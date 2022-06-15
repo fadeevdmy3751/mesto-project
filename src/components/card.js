@@ -8,11 +8,11 @@ import {openPopup} from "./popup.js";
 function createCard(name, link) {
   const card = cardTemplate.querySelector('.card').cloneNode(true);
   card.querySelector('.card__name').textContent = name;
-  const card_img = card.querySelector('.card__image');
-  card_img.alt = name;
-  card_img.src = link;
-  card_img.addEventListener('click', () => {
-    bigImage.src = card_img.src;
+  const cardImg = card.querySelector('.card__image');
+  cardImg.alt = name;
+  cardImg.src = link;
+  cardImg.addEventListener('click', () => {
+    bigImage.src = cardImg.src;
     bigImage.alt = name;
     bigImgCaption.textContent = name;
     openPopup(bigImgPopup)

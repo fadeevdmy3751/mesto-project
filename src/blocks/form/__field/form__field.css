@@ -16,6 +16,6 @@
   /*outline-offset: 5px;*/
 }
 
-.form__field:invalid {
-  border-bottom: 1px solid red;
-}
+/*.form__field:invalid {*/
+/*  border-bottom: 1px solid red;*/
+/*}*/
