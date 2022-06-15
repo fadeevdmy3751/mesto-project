@@ -7,4 +7,5 @@
 
 .card__image:hover {
   opacity: .6;
+  cursor: pointer;
 }
