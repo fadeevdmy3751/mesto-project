@@ -17,7 +17,7 @@
   </header>
   <main class="content">
     <section class="profile">
-      <img alt="Аватар" class="profile__avatar" src="<%=require('./images/kusto.jpg')%>">
+      <div class="profile__avatar"></div>
       <div class="profile__info">
         <h1 class="profile__name">Жак-Ив Кусто</h1>
         <button aria-label="редактировать" class="button profile__edit-button" type="button"></button>
@@ -40,6 +40,16 @@
       <input class="form__field" id="form__field-profession" name="profession" placeholder="Введите профессию"
              type="text" value="Исследователь океана" required  minlength="2" maxlength="200">
       <span class="form__field-profession-error form__error"></span>
+      <button class="form__button" type="submit">Сохранить</button>
+      <button class="popup__close button" type="reset"></button>
+    </form>
+  </div>
+  <div class="popup popup-avatar-edit">
+    <form class="form" name="popup-avatar-edit-form" novalidate>
+      <h2 class="popup__header">Обновить аватар</h2>
+      <input class="form__field" id="form__field-ava" name="avatar" placeholder="Введите ссылку на новый аватар"
+             type="url" value="" required>
+      <span class="form__error form__field-ava-error"></span>
       <button class="form__button" type="submit">Сохранить</button>
       <button class="popup__close button" type="reset"></button>
     </form>
@@ -70,6 +80,7 @@
       <img alt="" class="card__image" src="">
       <h2 class="card__name"></h2>
       <button class="card__like" type="button"></button>
+      <span class="card__like-count">0</span>
       <button class="card__delete button" type="button"></button>
     </div>
   </template>
