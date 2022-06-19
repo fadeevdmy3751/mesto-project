@@ -16,25 +16,22 @@ const URLs = {
   avatar: '/users/me/avatar'
 }
 
+function checkResponse(res, errorMes) {
+  if (res.ok) {
+    return res.json();
+  }
+  // если ошибка, отклоняем промис
+  return Promise.reject(`${errorMes + res.status}`);
+}
+
 export function getInitialCards(){
   return fetch(config.baseUrl + URLs.cards, {headers: config.headers})
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-      // если ошибка, отклоняем промис
-      return Promise.reject(`Ошибка getInitialCards: ${res.status}`);
-    });
+    .then(res => checkResponse(res, 'Ошибка getInitialCards: '))
 }
 
 export function getMe(){
   return fetch(config.baseUrl + URLs.me,{headers: config.headers})
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка getMe: ${res.status}`);
-    });
+    .then(res => checkResponse(res, 'Ошибка getMe: '))
 }
 
 export function editAvatar(url){
@@ -45,12 +42,7 @@ export function editAvatar(url){
       avatar: url,
     })
   })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка editAvatar: ${res.status}`);
-    });
+    .then(res => checkResponse(res, 'Ошибка editAvatar: '))
 }
 
 export function editProfile(name, about){
@@ -62,12 +54,7 @@ export function editProfile(name, about){
       about: about
     })
   })
-  .then(res => {
-        if (res.ok) {
-          return res.json();
-        }
-        return Promise.reject(`Ошибка editProfile: ${res.status}`);
-      });
+    .then(res => checkResponse(res, 'Ошибка editProfile: '))
 }
 
 export function addCardOnServer(name, link){
@@ -79,62 +66,31 @@ export function addCardOnServer(name, link){
       link: link
     })
   })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка addCardOnServer: ${res.status}`);
-    });
+    .then(res => checkResponse(res, 'Ошибка addCardOnServer: '))
 }
 
 export function deleteCard(event){
   const card = event.target.closest('.card');
-  fetch(config.baseUrl + URLs.cards +'/' + card._id, {
+  return fetch(config.baseUrl + URLs.cards +'/' + card._id, {
     method: 'DELETE',
     headers:  config.headers,
   })
-    .then(res => {
-      if (res.ok) {
-        console.log('delete card success');
-        card.remove();
-      } else console.log(`Ошибка deleteCard: ${res.status}`);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+    .then(res => checkResponse(res, 'Ошибка deleteCard: '))
 }
 
 export function likeCard(event){
   const card = event.target.closest('.card');
   if (card.myLike){ //удалить
-    fetch(config.baseUrl + URLs.like + card._id, {
+    return fetch(config.baseUrl + URLs.like + card._id, {
       method: 'DELETE',
       headers:  config.headers,
     })
-      .then(res => {
-        if (res.ok) {
-          console.log('delete like success');
-          return res.json()
-        } else console.log(`Ошибка delete like: ${res.status}`);
-      })
-      .then(json => refreshLikes(card, json))
-      .catch((err) => {
-        console.log(err);
-      });
+      .then(res => checkResponse(res, 'Ошибка delete like: '))
   } else { // поставить
-    fetch(config.baseUrl + URLs.like + card._id, {
+    return fetch(config.baseUrl + URLs.like + card._id, {
       method: 'PUT',
       headers:  config.headers,
     })
-      .then(res => {
-        if (res.ok) {
-          console.log('put like success');
-          return res.json()
-        } else console.log(`Ошибка put like: ${res.status}`);
-      })
-      .then(json => refreshLikes(card, json))
-      .catch((err) => {
-        console.log(err);
-      });
+      .then(res => checkResponse(res, 'Ошибка put like: '))
   }
 }

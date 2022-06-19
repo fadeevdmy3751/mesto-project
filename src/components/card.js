@@ -29,7 +29,17 @@ function createCard(json) {
     card.querySelector('.card__delete').style.display = 'none';
   } else {
     const cardDel = card.querySelector('.card__delete');
-    cardDel.addEventListener('click', deleteCard);
+    // cardDel.addEventListener('click', deleteCard);
+    cardDel.addEventListener('click', (evt) => {
+      deleteCard(evt)
+        .then(() => {
+          evt.target.closest(".card").remove()
+          console.log('delete card success')
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+    })
   }
   cardImg.addEventListener('click', () => {
     bigImage.src = cardImg.src;
@@ -38,7 +48,17 @@ function createCard(json) {
     openPopup(bigImgPopup);
   })
   refreshLikes(card, json);
-  card.querySelector('.card__like').addEventListener('click', likeCard);
+  // card.querySelector('.card__like').addEventListener('click', likeCard);
+  card.querySelector('.card__like').addEventListener('click', (evt) => {
+    likeCard(evt)
+      .then((json) => {
+        console.log('put/delete like success');
+        refreshLikes(card, json);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  })
   return card;
 }
 

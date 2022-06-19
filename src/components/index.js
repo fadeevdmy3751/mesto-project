@@ -27,26 +27,20 @@ import {validationParams, clearPopupInputs, enableValidation} from "./validate.j
 import {getInitialCards, getMe, editProfile, addCardOnServer, editAvatar} from './api.js';
 import {refreshProfile} from './utils.js';
 
-getInitialCards()
-  .then((json) => {
-    console.log('init cards', json);
-    json.forEach(el => addCard(createCard(el), elementsContainer));
+Promise.all([getInitialCards(), getMe()])
+  .then(([cardsInfo, userInfo]) => {
+    console.log('init cards', cardsInfo);
+    cardsInfo.forEach(el => addCard(createCard(el), elementsContainer));
+
+    console.log('user', userInfo);
+    refreshProfile(userInfo.name, userInfo.about, userInfo.avatar);
+    myID = userInfo._id;
   })
   .catch((err) => {
     console.log(err);
   });
 
 export let myID;
-
-getMe()
-  .then((json) => {
-    console.log('user', json);
-    refreshProfile(json.name, json.about, json.avatar);
-    myID = json._id;
-  })
-  .catch((err) => {
-    console.log(err);
-  });
 
 profileAvatar.addEventListener('click', () => {
   clearPopupInputs(avatarEditPopup, validationParams);
@@ -68,11 +62,14 @@ avatarEditForm.addEventListener('submit', evt => {
     .then((json) => {
       console.log('user avatar updated', json)
       refreshProfile(null, null, json.avatar)
+      closePopup(avatarEditPopup);
     })
     .catch((err) => {
       console.log(err);
-    });
-  closePopup(avatarEditPopup);
+    })
+    .finally(() => {
+      avatarEditForm.querySelector('.form__button').textContent = 'Сохранить'
+    })
 })
 
 profileEditForm.addEventListener('submit', evt => {
@@ -82,11 +79,14 @@ profileEditForm.addEventListener('submit', evt => {
     .then((json) => {
       console.log('userinfo updated', json)
       refreshProfile(json.name, json.about)
+      closePopup(profileEditPopup);
     })
     .catch((err) => {
       console.log(err);
-    });
-  closePopup(profileEditPopup);
+    })
+    .finally(() => {
+      profileEditForm.querySelector('.form__button').textContent = 'Сохранить'
+    })
 })
 
 cardAddBtn.addEventListener('click', () => {
@@ -106,7 +106,10 @@ cardAddForm.addEventListener('submit', evt => {
     })
     .catch((err) => {
       console.log(err);
-    });
+    })
+    .finally(() => {
+      cardAddForm.querySelector('.form__button').textContent = 'Сохранить'
+    })
 })
 
 popupCloseButtons.forEach(btn => {
