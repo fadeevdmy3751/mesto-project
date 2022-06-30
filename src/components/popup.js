@@ -1,6 +1,5 @@
-import { popups } from './index.js';
 
-export class Popup {
+export default class Popup {
   constructor (selector) {
     this._handleEscClose = this._handleEscClose.bind(this);
     this.selector = document.querySelector(selector)

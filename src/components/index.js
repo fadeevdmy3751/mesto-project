@@ -16,11 +16,11 @@ const cardAddForm = cardAddPopup.querySelector('.form[name="popup-card-add-form"
 const cardNameInput = cardAddPopup.querySelector('#card-add-name');
 const cardLinkInput = cardAddPopup.querySelector('#card-add-link');
 const elementsContainer = content.querySelector('.elements');
-export const popups = document.querySelectorAll('.popup');
+const popups = document.querySelectorAll('.popup');
 const popupCloseButtons = document.querySelectorAll('.popup__close')
 
 import  '../pages/index.css';
-import { Popup } from './Popup.js';
+import Popup from './Popup.js';
 //import { openPopup, closePopup } from './popup.js';
 import {addCard, createCard} from './card.js';
 import {validationParams, clearPopupInputs, enableValidation} from "./validate.js";
@@ -42,18 +42,38 @@ Promise.all([getInitialCards(), getMe()])
 
 export let myID;
 
+//открыть окно добавления карточки
+const openPopupCard = new Popup ('.popup-card-add');
+
+ cardAddBtn.addEventListener('click', () => {
+   //clearPopupInputs(cardAddPopup, validationParams);
+   openPopupCard.open();
+ })
+
+
+ //открыть окно редактирования аватарки
+const openPopupAvatar = new Popup ('.popup-avatar-edit');
+
 profileAvatar.addEventListener('click', () => {
   clearPopupInputs(avatarEditPopup, validationParams);
-  Popup.open(avatarEditPopup);
+  openPopupAvatar.open();
 });
-cardAddBtn.addEventListener('click', () => Popup.open(cardAddPopup));
+
+
+//открыть окно редактирования профиля
+const openPopupProfile = new Popup ('.popup-profile-edit');
 
 profileEditBtn.addEventListener('click', () => {
   clearPopupInputs(profileEditPopup, validationParams);
-  Popup.open(profileEditPopup);
+  openPopupProfile.open();
   nameInput.value = profileName.textContent;
   descriptionInput.value = profileDescription.textContent;
 })
+
+
+//cardAddBtn.addEventListener('click', () => Popup.open(cardAddPopup));
+
+
 
 avatarEditForm.addEventListener('submit', evt => {
   evt.preventDefault();
@@ -89,10 +109,7 @@ profileEditForm.addEventListener('submit', evt => {
     })
 })
 
-cardAddBtn.addEventListener('click', () => {
-  clearPopupInputs(cardAddPopup, validationParams);
-  Popup.open(cardAddPopup);
-})
+
 
 cardAddForm.addEventListener('submit', evt => {
   evt.preventDefault();
