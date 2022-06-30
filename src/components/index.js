@@ -16,12 +16,12 @@ const cardAddForm = cardAddPopup.querySelector('.form[name="popup-card-add-form"
 const cardNameInput = cardAddPopup.querySelector('#card-add-name');
 const cardLinkInput = cardAddPopup.querySelector('#card-add-link');
 const elementsContainer = content.querySelector('.elements');
-const popups = document.querySelectorAll('.popup');
+export const popups = document.querySelectorAll('.popup');
 const popupCloseButtons = document.querySelectorAll('.popup__close')
 
 import  '../pages/index.css';
-
-import { openPopup, closePopup } from './popup.js';
+import { Popup } from './Popup.js';
+//import { openPopup, closePopup } from './popup.js';
 import {addCard, createCard} from './card.js';
 import {validationParams, clearPopupInputs, enableValidation} from "./validate.js";
 import {getInitialCards, getMe, editProfile, addCardOnServer, editAvatar} from './api.js';
@@ -44,13 +44,13 @@ export let myID;
 
 profileAvatar.addEventListener('click', () => {
   clearPopupInputs(avatarEditPopup, validationParams);
-  openPopup(avatarEditPopup);
+  Popup.open(avatarEditPopup);
 });
-cardAddBtn.addEventListener('click', () => openPopup(cardAddPopup));
+cardAddBtn.addEventListener('click', () => Popup.open(cardAddPopup));
 
 profileEditBtn.addEventListener('click', () => {
   clearPopupInputs(profileEditPopup, validationParams);
-  openPopup(profileEditPopup);
+  Popup.open(profileEditPopup);
   nameInput.value = profileName.textContent;
   descriptionInput.value = profileDescription.textContent;
 })
@@ -62,7 +62,7 @@ avatarEditForm.addEventListener('submit', evt => {
     .then((json) => {
       console.log('user avatar updated', json)
       refreshProfile(null, null, json.avatar)
-      closePopup(avatarEditPopup);
+      Popup.close(avatarEditPopup);
     })
     .catch((err) => {
       console.log(err);
@@ -79,7 +79,7 @@ profileEditForm.addEventListener('submit', evt => {
     .then((json) => {
       console.log('userinfo updated', json)
       refreshProfile(json.name, json.about)
-      closePopup(profileEditPopup);
+      Popup.close(profileEditPopup);
     })
     .catch((err) => {
       console.log(err);
@@ -91,7 +91,7 @@ profileEditForm.addEventListener('submit', evt => {
 
 cardAddBtn.addEventListener('click', () => {
   clearPopupInputs(cardAddPopup, validationParams);
-  openPopup(cardAddPopup);
+  Popup.open(cardAddPopup);
 })
 
 cardAddForm.addEventListener('submit', evt => {
@@ -100,7 +100,7 @@ cardAddForm.addEventListener('submit', evt => {
   addCardOnServer(cardNameInput.value, cardLinkInput.value)
     .then((json) => {
       addCard(createCard(json), elementsContainer, true);
-      closePopup(cardAddPopup);
+      Popup.close(cardAddPopup);
       cardNameInput.value = '';
       cardLinkInput.value = '';
     })
@@ -112,16 +112,17 @@ cardAddForm.addEventListener('submit', evt => {
     })
 })
 
-popupCloseButtons.forEach(btn => {
-  btn.addEventListener('click', () => {
-    closePopup(btn.closest('.popup'))
-  })
-})
+// popupCloseButtons.forEach(btn => {
+//   btn.addEventListener('click', () => {
+//     closePopup(btn.closest('.popup'))
+//   })
+// })
 
-popups.forEach(popup => {
-  popup.addEventListener('click', (evt) => {
-    if (evt.target.classList.contains('popup')) closePopup(popup)
-  })
-})
+// popups.forEach(popup => {
+//   popup.addEventListener('click', (evt) => {
+//     if (evt.target.classList.contains('popup'))
+//     closePopup(popup)
+//   })
+// })
 
 enableValidation(validationParams);
