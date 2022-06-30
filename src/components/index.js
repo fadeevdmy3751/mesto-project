@@ -74,14 +74,16 @@ profileEditBtn.addEventListener('click', () => {
 
 //закрыть окна
 const closePopup = new Popup ('.popup__close');
+// console.log(closePopup)
+// console.log(closePopup.close())
 
-popupCloseButtons.forEach(btn => {
-  btn.addEventListener('click', closePopup.close)
-})
+// popupCloseButtons.forEach(btn => {
+//   btn.addEventListener('click', closePopup.close())
+// })
 
-popups.forEach(popup => {
-  popup.addEventListener('click',  closePopup.close)
-})
+// popups.forEach(popup => {
+//   popup.addEventListener('click', closePopup.close())
+// })
 
 
 avatarEditForm.addEventListener('submit', evt => {
