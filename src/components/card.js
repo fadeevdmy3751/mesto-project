@@ -1,11 +1,12 @@
 const cardTemplate = document.querySelector('#card-template').content;
-const bigImgPopup = document.querySelector('.big-img');
-const bigImage = bigImgPopup.querySelector('img');
-const bigImgCaption = bigImgPopup.querySelector('figcaption');
+export const bigImgPopup = document.querySelector('.big-img');
+export const bigImage = bigImgPopup.querySelector('img');
+export const bigImgCaption = bigImgPopup.querySelector('figcaption');
 
 import Popup from './popup.js';
 import {myID} from "./index.js";   // перекрестный импорт хз как работает
 import {deleteCard, likeCard} from "./api.js";
+import PopupWithImage from './PopupWithImage.js'
 
 function refreshLikes(card, json){
   card.querySelector('.card__like-count').textContent = json.likes.length;
@@ -41,14 +42,13 @@ function createCard(json) {
         })
     })
   }
-
-  const openPopupImage = new Popup ('.big-img')
+  const PopupOpenImage = new PopupWithImage('.big-img');
 
   cardImg.addEventListener('click', () => {
-    bigImage.src = cardImg.src;
-    bigImage.alt = json.name;
-    bigImgCaption.textContent = json.name;
-    openPopupImage.open();
+    // bigImage.src = cardImg.src;
+    // bigImage.alt = json.name;
+    // bigImgCaption.textContent = json.name;
+    PopupOpenImage.openImage();
   })
   refreshLikes(card, json);
   // card.querySelector('.card__like').addEventListener('click', likeCard);

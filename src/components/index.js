@@ -19,7 +19,7 @@ const elementsContainer = content.querySelector('.elements');
 const popups = document.querySelectorAll('.popup');
 const popupCloseButtons = document.querySelectorAll('.popup__close')
 
-import  '../pages/index.css';
+// import  '../pages/index.css';
 import Popup from './popup.js';
 //import { openPopup, closePopup } from './popup.js';
 import {addCard, createCard} from './card.js';
@@ -70,10 +70,10 @@ profileEditBtn.addEventListener('click', () => {
   descriptionInput.value = profileDescription.textContent;
 })
 
-//cardAddBtn.addEventListener('click', () => Popup.open(cardAddPopup));
+
 
 //закрыть окна
-const closePopup = new Popup ('.popup__close');
+//const closePopup = new Popup ('.popup__close');
 // console.log(closePopup)
 // console.log(closePopup.close())
 
