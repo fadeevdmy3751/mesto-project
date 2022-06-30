@@ -20,7 +20,7 @@ const popups = document.querySelectorAll('.popup');
 const popupCloseButtons = document.querySelectorAll('.popup__close')
 
 import  '../pages/index.css';
-import Popup from './Popup.js';
+import Popup from './popup.js';
 //import { openPopup, closePopup } from './popup.js';
 import {addCard, createCard} from './card.js';
 import {validationParams, clearPopupInputs, enableValidation} from "./validate.js";
@@ -46,7 +46,7 @@ export let myID;
 const openPopupCard = new Popup ('.popup-card-add');
 
  cardAddBtn.addEventListener('click', () => {
-   //clearPopupInputs(cardAddPopup, validationParams);
+   clearPopupInputs(cardAddPopup, validationParams);
    openPopupCard.open();
  })
 
@@ -70,9 +70,20 @@ profileEditBtn.addEventListener('click', () => {
   descriptionInput.value = profileDescription.textContent;
 })
 
-
 //cardAddBtn.addEventListener('click', () => Popup.open(cardAddPopup));
 
+//закрыть окна
+const closePopup = new Popup ('.popup__close');
+
+popupCloseButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    closePopup.close()
+  })
+})
+
+popups.forEach(popup => {
+  popup.addEventListener('click', closePopup.close)
+})
 
 
 avatarEditForm.addEventListener('submit', evt => {
@@ -82,7 +93,7 @@ avatarEditForm.addEventListener('submit', evt => {
     .then((json) => {
       console.log('user avatar updated', json)
       refreshProfile(null, null, json.avatar)
-      Popup.close(avatarEditPopup);
+      closePopup.close();
     })
     .catch((err) => {
       console.log(err);
@@ -99,7 +110,7 @@ profileEditForm.addEventListener('submit', evt => {
     .then((json) => {
       console.log('userinfo updated', json)
       refreshProfile(json.name, json.about)
-      Popup.close(profileEditPopup);
+      closePopup.close();
     })
     .catch((err) => {
       console.log(err);
@@ -117,7 +128,7 @@ cardAddForm.addEventListener('submit', evt => {
   addCardOnServer(cardNameInput.value, cardLinkInput.value)
     .then((json) => {
       addCard(createCard(json), elementsContainer, true);
-      Popup.close(cardAddPopup);
+      closePopup.close();
       cardNameInput.value = '';
       cardLinkInput.value = '';
     })
@@ -129,17 +140,6 @@ cardAddForm.addEventListener('submit', evt => {
     })
 })
 
-// popupCloseButtons.forEach(btn => {
-//   btn.addEventListener('click', () => {
-//     closePopup(btn.closest('.popup'))
-//   })
-// })
 
-// popups.forEach(popup => {
-//   popup.addEventListener('click', (evt) => {
-//     if (evt.target.classList.contains('popup'))
-//     closePopup(popup)
-//   })
-// })
 
 enableValidation(validationParams);

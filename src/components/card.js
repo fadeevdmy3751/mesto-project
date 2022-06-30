@@ -3,7 +3,7 @@ const bigImgPopup = document.querySelector('.big-img');
 const bigImage = bigImgPopup.querySelector('img');
 const bigImgCaption = bigImgPopup.querySelector('figcaption');
 
-import {openPopup} from "./popup.js";
+import Popup from './popup.js';
 import {myID} from "./index.js";   // перекрестный импорт хз как работает
 import {deleteCard, likeCard} from "./api.js";
 
@@ -41,11 +41,14 @@ function createCard(json) {
         })
     })
   }
+
+  const openPopupImage = new Popup ('.big-img')
+
   cardImg.addEventListener('click', () => {
     bigImage.src = cardImg.src;
     bigImage.alt = json.name;
     bigImgCaption.textContent = json.name;
-    openPopup(bigImgPopup);
+    openPopupImage.open();
   })
   refreshLikes(card, json);
   // card.querySelector('.card__like').addEventListener('click', likeCard);
