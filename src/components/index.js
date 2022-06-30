@@ -76,13 +76,11 @@ profileEditBtn.addEventListener('click', () => {
 const closePopup = new Popup ('.popup__close');
 
 popupCloseButtons.forEach(btn => {
-  btn.addEventListener('click', () => {
-    closePopup.close()
-  })
+  btn.addEventListener('click', closePopup.close)
 })
 
 popups.forEach(popup => {
-  popup.addEventListener('click', closePopup.close)
+  popup.addEventListener('click',  closePopup.close)
 })
 
 
