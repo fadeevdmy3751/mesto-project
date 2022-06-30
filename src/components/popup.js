@@ -1,36 +1,31 @@
 import { popups } from './index.js';
 
 export class Popup {
-  constructor (popup) {
-    this.popup = popup;
+  constructor (selector) {
+    this._handleEscClose = this._handleEscClose.bind(this);
+    this.selector = document.querySelector(selector)
   };
 
-  open(popup) {
-    this.popup.classList.add('popup_opened');
-    this. popup.ESChandler = closeOnEscape(popup);
-    document.addEventListener('keyup',popup.ESChandler);
+  open() {
+    this.selector.classList.add('popup_opened');
+    document.addEventListener('keyup', _handleEscClose);
   };
 
-  close(popup) {
-    this.popup.classList.remove('popup_opened');
-    document.removeEventListener('keyup', popup.ESChandler);
-    this.popup.ESChandler = null;
+  close() {
+    this.selector.classList.remove('popup_opened');
+    document.removeEventListener('keyup', _handleEscClose);
   };
 
-  _handleEscClose(popup){
-    return (evt) => {
-      if (evt.key === "Escape")
-        this.close(popup);
-    }
+  _handleEscClose(evt){
+    if (evt.key === "Escape")
+      this.close();
   };
 
   setEventListeners(){
-    popups.forEach((popup) => {
-      popup.addEventListener('mousedown', (evt) => {
-        if (evt.target.classList.contains('popup__close') || evt.target.classList.contains('popup')) {
-          this.close(popup)
-        }
-      });
+    this.selector.addEventListener('mousedown', (evt) => {
+      if (evt.target.classList.contains('popup__close') || evt.target.classList.contains('popup')) {
+        this.close()
+      }
     });
   }
 }
