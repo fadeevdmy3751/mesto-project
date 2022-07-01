@@ -1,5 +1,5 @@
 import Popup from './Popup.js'
-import { bigImage, bigImgCaption } from './Card.js'
+// import { bigImage, bigImgCaption } from './Card.js'
 
 export default class PopupWithImage extends Popup {
   constructor(selector, cardImg, cardtext){
@@ -10,10 +10,10 @@ export default class PopupWithImage extends Popup {
   };
   openImage(){
     super.open();
-
-    document.querySelector('.big-img__image').src = this.image;
-    document.querySelector('.big-img__caption').textContent = this.text;
-    document.querySelector('.big-img__image').alt = this.text;
+    this.selector.classList.add('popup_opened');
+    document.querySelector('.big-img__image').src = this.cardImg;
+    document.querySelector('.big-img__caption').textContent = this.cardtext;
+    document.querySelector('.big-img__image').alt = this.cardtext;
 
     // bigImage.src = this.cardImg.src;
     // this.cardImg.src = bigImage.src;

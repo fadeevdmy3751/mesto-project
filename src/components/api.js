@@ -1,5 +1,5 @@
 import {TOKEN, COHORT} from './secret.js';
-import {refreshLikes} from "./card.js";
+// import {refreshLikes} from "./card.js";
 
 export class Api {
   constructor({ baseUrl, headers }) {
