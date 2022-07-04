@@ -1,26 +1,26 @@
 
 export const bigImgPopup = document.querySelector('.big-img');
-export const bigImage = bigImgPopup.querySelector('img');
-export const bigImgCaption = bigImgPopup.querySelector('figcaption');
+export const bigImage = bigImgPopup.querySelector('.big-img__image');
+export const bigImgCaption = bigImgPopup.querySelector('.big-img__caption');
 const cardTemplate = document.querySelector('#card-template').content;
 
 import PopupWithImage from './PopupWithImage.js';
-import Popup from './popup.js';
+// import Popup from './popup.js';
 // import {myID} from "./index.js";   // перекрестный импорт хз как работает
 // import {deleteCard, likeCard} from "./api.js";
 // import initialCards from './initialCards.js'
 
 export default class Card {
-  constructor(data, selector){
+  constructor(data, selector, userId, myId){
     this._selector = (selector);
     this._name = data.name;
-    //this._likesLength = data.likes.length; //колличество лайков
+    this._likesLength = data.likes.length; //колличество лайков
     this._link = data.link;
     this._likes = data.likes;
-    //this._cardId = data.owner._id; //owner._id - автор карточки
-    //this._userId = userId;
-    //this._myID = myId;
-    //console.log(this._cardId)
+    this._cardId = data.owner._id; //owner._id - автор карточки
+    this._userId = userId;
+    this._myID = myId;
+    console.log(this._cardId)
   }
 
   _getElement() {
@@ -62,9 +62,9 @@ export default class Card {
 
   addDeleteButton() {
     if (this._userId === this._cardId) {
-        this._element.querySelector('.card__delete').classList.remove('card__delete_inactive');
+        this._element.querySelector('.card__delete');
     } else {
-        this._element.querySelector('.card__delete').classList.add('card__delete_inactive');
+        this._element.querySelector('.card__delete').style.display = 'none';
     }
   }
 

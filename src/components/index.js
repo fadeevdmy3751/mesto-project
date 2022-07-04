@@ -28,72 +28,35 @@ import Popup from './popup.js';
 import Card from './card.js';
 import Section from './Section.js'
 import {validationParams, clearPopupInputs, enableValidation} from "./validate.js";
-// import { Api, getMe } from './api.js';
-// import {refreshProfile} from './utils.js';
-import initialCards from './initialCards.js'
+import { CardsApi, ProfileApi } from './api.js';
+import {refreshProfile} from './utils.js';
 
+const cardsApi = new CardsApi()
+const profileApi = new ProfileApi()
 
-const cardList = new Section({
-  data: initialCards,
-  renderer: (item) => {
-    const card = new Card (item, '#card-template');
-    const cardElement = card.generate();
-    cardList.setItem(cardElement);
-  }
-}, '.elements');
+Promise.all([cardsApi.getInitialCards(), profileApi.getMe()])
+  .then(([cardsInfo, userInfo]) => {
+    console.log(userInfo);
+    console.log('init cards', cardsInfo);
+    const cardList = new Section({
+      data: cardsInfo,
+      renderer: (item) => {
+        const card = new Card (item, '#card-template');
+        const cardElement = card.generate();
+        cardList.setItem(cardElement);
+        card.addDefaultLike();
+        card.addDeleteButton();
+        card.handleCardClick();
+      }
+    }, '.elements');
 
-cardList.renderItems();
-
-
-// const api = new Api({
-//   baseUrl: 'https://nomoreparties.co/v1/plus-cohort-11',
-//   headers: {
-//     authorization: '7da4e682-e653-495f-9d74-1a03b7d57194',
-//     'Content-Type': 'application/json'
-//   }
-// });
-
-// api.getDefaultItems().then(([data, cards]) => {
-//   profileName.textContent = data.name;
-//   profileDescription.textContent = data.about;
-//   profileAvatar.src = data.avatar;
-
-//   const defaultCardList = new Section({
-//       data: cards,
-//       renderer: (items) => {
-//           const cards = new DefaultCard(items, '#card-templat', data._id);
-//           const cardElement = cards.generate();
-//           defaultCardList.setItem(cardElement);
-//           cards.addDefaultLike();
-//           cards.addDeleteButton();
-//           cards.handleCardClick();
-//       }
-//   }, '.elements');
-//   defaultCardList.addItems();
-
-// }).catch((err) => { console.log(err) });
-
-
-// Promise.all([api.getInitialCards(), getMe()])
-//   .then(([cardsInfo, userInfo]) => {
-//     console.log('init cards', cardsInfo);
-//     const Card = new Card (cardsInfo, cardTemplate)
-//     cardsInfo.forEach(function (el) {
-//       Card.addCard(Card.generate(el), elementsContainer)
-//     });
-
-//     console.log('user', userInfo);
-//     refreshProfile(userInfo.name, userInfo.about, userInfo.avatar);
-//     myID = userInfo._id;
-//   })
-//   .catch((err) => {
-//     console.log(err);
-//   });
-
-// export let myID;
-
-
-
+    cardList.renderItems();
+    refreshProfile(userInfo.name, userInfo.about, userInfo.avatar);
+     myID = userInfo._id;
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
 
 
