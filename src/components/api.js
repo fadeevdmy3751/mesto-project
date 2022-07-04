@@ -1,7 +1,7 @@
 import {TOKEN, COHORT} from './secret.js';
 // import {refreshLikes} from "./card.js";
 
-export class Api {
+class Api {
   constructor() {
     this._config = {
       baseUrl: 'https://nomoreparties.co/v1/' + COHORT,
@@ -10,6 +10,23 @@ export class Api {
         'Content-Type': 'application/json'
       }
     }
+  }
+
+  // метод выполнения запроса по url-ресурсу
+  _makeFetch(fetchResource, requestMethod, errorMes, requestBody = undefined) {
+    // формирование тела запроса без body
+    const fetchOptions = {
+      method: requestMethod,
+      headers: this._config.headers
+    };
+
+    // проверка на наличие body и включение в тело запроса
+    if(requestBody !== undefined) {
+      fetchOptions.body = JSON.stringify(requestBody);
+    }
+
+    return fetch(fetchResource, fetchOptions)
+        .then(res => this._checkResponse(res, errorMes))
   }
 
   // метод проверки ответа от сервера на наличие ошибки
@@ -23,6 +40,86 @@ export class Api {
     return Promise.reject(`${errorMes + res.status}`);
   }
 
+}
+
+export class AvatarApi extends Api {
+  constructor() {
+    super();
+    this._avatarBaseUrl = '/users/me/avatar';
+  }
+
+  // метод редактирования аватара
+  editAvatar(url) {
+    return this._makeFetch(this._config.baseUrl + this._avatarBaseUrl,
+        'PATCH', 'Ошибка editAvatar: ', {avatar: url});
+  }
+}
+
+export class ProfileApi extends Api {
+  constructor() {
+    super();
+    this._profileBaseUrl = '/users/me';
+  }
+
+  // метод получения данных собственного профиля
+  getMe() {
+    return this._makeFetch(this._config.baseUrl + this._profileBaseUrl, 'GET',
+        'Ошибка getMe: ');
+  }
+
+  // метод редактирования собственного профиля
+  editProfile(name, about) {
+    return this._makeFetch(this._config.baseUrl + this._profileBaseUrl, 'PATCH',
+        'Ошибка editProfile: ', {name: name, about: about});
+  }
+}
+
+export class CardsApi extends Api {
+  constructor() {
+    super();
+    this._cardsBaseUrl = '/cards';
+    this._cardsLikeBaseUrl = '/cards/likes/';
+  }
+
+  // метод получения текущих карточек с сервера
+  getInitialCards() {
+    return this._makeFetch(this._config.baseUrl + this._cardsBaseUrl, 'GET',
+        'Ошибка getInitialCards: ');
+  }
+
+  // метод добавления новой карточки на сервер
+  addCardOnServer(name, link) {
+    return this._makeFetch(this._config.baseUrl + this._cardsBaseUrl, 'POST',
+        'Ошибка addCardOnServer: ', {name: name, link: link});
+  }
+
+  // метод удаления выбранной (определяется по event) карточки
+  deleteCard(event) {
+    const card = event.target.closest('.card');
+    return this._makeFetch(this._config.baseUrl + this._cardsBaseUrl +'/' + card._id, 'DELETE',
+        'Ошибка deleteCard: ');
+  }
+
+  // метод присвоения/удаления лайка карточке
+  likeCard(event) {
+    const card = event.target.closest('.card');
+
+    // инициализация параметров
+    let requestMethod = '';
+    let errorMes = '';
+
+    // заполнение параметров значениями в зависимости от требуемого действия с карточкой
+    if (card.myLike) { //удалить лайк
+      requestMethod = 'DELETE';
+      errorMes = 'Ошибка delete like: ';
+    } else {  // поставить лайк
+      requestMethod = 'PUT';
+      errorMes = 'Ошибка put like: ';
+    }
+
+    return this._makeFetch(this._config.baseUrl + this._cardsLikeBaseUrl + card._id, requestMethod,
+        errorMes);
+  }
 }
 
 // из старого кода - конфиг хедера для подключения к серверу
@@ -59,23 +156,6 @@ export class Api {
 //   return fetch(config.baseUrl + URLs.me,{headers: config.headers})
 //     .then(res => checkResponse(res, 'Ошибка getMe: '))
 // }
-export class AvatarApi extends Api {
-  constructor() {
-    super();
-    this._avatarBaseUrl = '/users/me/avatar';
-  }
-
-  editAvatar(url){
-    return fetch(this._config.baseUrl + this._avatarBaseUrl, {
-      method: 'PATCH',
-      headers:  this._config.headers,
-      body: JSON.stringify({
-        avatar: url,
-      })
-    })
-      .then(res => this._checkResponse(res, 'Ошибка editAvatar: '))
-  }
-}
 
 // export function editAvatar(url){
 //   return fetch(config.baseUrl + URLs.avatar, {
@@ -88,30 +168,6 @@ export class AvatarApi extends Api {
 //     .then(res => checkResponse(res, 'Ошибка editAvatar: '))
 // }
 
-export class ProfileApi extends Api {
-  constructor() {
-    super();
-    this._profileBaseUrl = '/users/me';
-  }
-
-  getMe() {
-    return fetch(this._config.baseUrl + this._profileBaseUrl,{headers: this._config.headers})
-      .then(res => this._checkResponse(res, 'Ошибка getMe: '))
-  }
-
-  editProfile(name, about){
-    return fetch(this._config.baseUrl + this._profileBaseUrl, {
-      method: 'PATCH',
-      headers:  this._config.headers,
-      body: JSON.stringify({
-        name: name,
-        about: about
-      })
-    })
-      .then(res => this._checkResponse(res, 'Ошибка editProfile: '))
-  }
-}
-
 // export function editProfile(name, about){
 //   return fetch(config.baseUrl + URLs.me, {
 //     method: 'PATCH',
@@ -123,57 +179,6 @@ export class ProfileApi extends Api {
 //   })
 //     .then(res => checkResponse(res, 'Ошибка editProfile: '))
 // }
-
-export class CardsApi extends Api {
-  constructor() {
-    super();
-    this._cardsBaseUrl = '/cards';
-    this._cardsLikeBaseUrl = '/cards/likes/';
-  }
-
-  getInitialCards(){
-    return fetch(this._config.baseUrl + this._cardsBaseUrl, {headers: this._config.headers})
-      .then(res => this._checkResponse(res, 'Ошибка getInitialCards: '))
-  }
-
-  addCardOnServer(name, link){
-    return  fetch(this._config.baseUrl + this._cardsBaseUrl, {
-      method: 'POST',
-      headers:  this._config.headers,
-      body: JSON.stringify({
-        name: name,
-        link: link
-      })
-    })
-      .then(res => this._checkResponse(res, 'Ошибка addCardOnServer: '));
-  }
-
-  deleteCard(event){
-    const card = event.target.closest('.card');
-    return fetch(this._config.baseUrl + this._cardsBaseUrl +'/' + card._id, {
-      method: 'DELETE',
-      headers:  this._config.headers,
-    })
-      .then(res => this._checkResponse(res, 'Ошибка deleteCard: '));
-  }
-
-  likeCard(event){
-    const card = event.target.closest('.card');
-    if (card.myLike){ //удалить
-      return fetch(this._config.baseUrl + this._cardsLikeBaseUrl + card._id, {
-        method: 'DELETE',
-        headers:  this._config.headers,
-      })
-        .then(res => this._checkResponse(res, 'Ошибка delete like: '))
-    } else { // поставить
-      return fetch(this._config.baseUrl + this._cardsLikeBaseUrl + card._id, {
-        method: 'PUT',
-        headers:  this._config.headers,
-      })
-        .then(res => this._checkResponse(res, 'Ошибка put like: '))
-    }
-  }
-}
 
 // export function addCardOnServer(name, link){
 //   return  fetch(config.baseUrl + URLs.cards, {
@@ -213,4 +218,4 @@ export class CardsApi extends Api {
 //   }
 // }
 
-const api = new Api();
+// const api = new Api();
