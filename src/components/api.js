@@ -122,6 +122,15 @@ export class CardsApi extends Api {
   }
 }
 
+export const api = new Api({
+  baseUrl: 'https://nomoreparties.co/v1/plus-cohort-11',
+  headers: {
+    authorization: '7da4e682-e653-495f-9d74-1a03b7d57194',
+    'Content-Type': 'application/json'
+  }
+});
+
+
 // из старого кода - конфиг хедера для подключения к серверу
 // const config = {
 //   baseUrl: 'https://nomoreparties.co/v1/' + COHORT,

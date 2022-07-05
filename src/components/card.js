@@ -20,7 +20,7 @@ export default class Card {
     this._cardId = data.owner._id; //owner._id - автор карточки
     this._userId = userId;
     this._myID = myId;
-    console.log(this._cardId)
+    // console.log(this._cardId)
   }
 
   _getElement() {
@@ -45,7 +45,7 @@ export default class Card {
 
   handleCardClick() {
     this._element.querySelector('.card__image').addEventListener('click', (evt) => {
-        const cardPopup = new PopupWithImage('.big-img', this._link, this._name);
+        const cardPopup = new PopupWithImage(bigImgPopup, this._link, this._name);
         bigImage.src = this._link;
         bigImgCaption.textContent = this._name;
         cardPopup.open();
