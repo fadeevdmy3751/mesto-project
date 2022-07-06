@@ -39,7 +39,6 @@ class Api {
     // если ошибка, отклоняем промис
     return Promise.reject(`${errorMes + res.status}`);
   }
-
 }
 
 export class AvatarApi extends Api {

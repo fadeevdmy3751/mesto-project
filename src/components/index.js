@@ -95,7 +95,9 @@ profileEditBtn.addEventListener('click', () => {
     }
   });
 
-  profileEditForm.addEventListener('submit', formEditUser.close(profileEditPopup));
+  profileEditForm.addEventListener('submit', () => {
+    formEditUser.close(profileEditPopup);
+  });
 
 // profileEditForm.addEventListener('submit', evt => {
 //   evt.preventDefault();
