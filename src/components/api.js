@@ -101,7 +101,9 @@ export class CardsApi extends Api {
 
   // метод присвоения/удаления лайка карточке
   likeCard(event) {
+    console.log(event)
     const card = event.target.closest('.card');
+
 
     // инициализация параметров
     let requestMethod = '';

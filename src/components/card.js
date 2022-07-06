@@ -5,10 +5,10 @@ export const bigImgCaption = bigImgPopup.querySelector('.big-img__caption');
 const cardTemplate = document.querySelector('#card-template').content;
 
 import PopupWithImage from './PopupWithImage.js';
+import { CardsApi } from './api.js'
 // import Popup from './popup.js';
-// import {myID} from "./index.js";   // перекрестный импорт хз как работает
+import {myID} from "./index.js";   // перекрестный импорт хз как работает
 // import {deleteCard, likeCard} from "./api.js";
-// import initialCards from './initialCards.js'
 
 export default class Card {
   constructor(data, selector, userId, myId){
@@ -19,6 +19,7 @@ export default class Card {
     this._likes = data.likes;
     this._cardId = data.owner._id; //owner._id - автор карточки
     this._userId = userId;
+    // this._CardsApi = CardsApi
     this._myID = myId;
     // console.log(this._cardId)
   }
@@ -35,6 +36,10 @@ export default class Card {
 
   generate() {
     this._element = this._getElement();
+    this._setEventListeners();
+    this._addDefaultLike()
+    this._addDeleteButton()
+    // this._refreshLikes(this._element, json)
     this._element.querySelector('.card__image').src = this._link;
     this._element.querySelector('.card__name').textContent = this._name;
     this._element.querySelector('.card__image').alt = this._name;
@@ -43,16 +48,15 @@ export default class Card {
     return this._element;
   }
 
-  handleCardClick() {
-    this._element.querySelector('.card__image').addEventListener('click', (evt) => {
-        const cardPopup = new PopupWithImage(bigImgPopup, this._link, this._name);
-        bigImage.src = this._link;
-        bigImgCaption.textContent = this._name;
-        cardPopup.open();
-    })
+  _handleCardClick() {
+    const cardPopup = new PopupWithImage(bigImgPopup, this._link, this._name);
+    bigImage.src = this._link;
+    bigImgCaption.textContent = this._name;
+    cardPopup.open();
+
   }
 
-  addDefaultLike() {
+  _addDefaultLike() {
     this._likes.forEach((item) => {
         if (this._userId === item._id) {
             this._element.querySelector('.card__like').classList.add('card__like_set');
@@ -60,7 +64,7 @@ export default class Card {
     })
   }
 
-  addDeleteButton() {
+  _addDeleteButton() {
     if (this._userId === this._cardId) {
         this._element.querySelector('.card__delete');
     } else {
@@ -68,13 +72,31 @@ export default class Card {
     }
   }
 
+
+  refreshLikes(card, json) {
+    card.querySelector('.card__like-count').textContent = json.likes.length;
+    card.myLike = json.likes.some(liker => liker._id === myID)
+    if (card.myLike){
+      card.querySelector('.card__like').classList.add('card__like_set')
+    } else {
+      card.querySelector('.card__like').classList.remove('card__like_set')
+    }
+  }
+
+
   _setEventListeners() {
-    this._element.addEventListener('click', () => {
-      this.Popup.open();
-    });
-    popupCloseButton.addEventListener('click', () => {
-      this.Popup.close();
-    });
+    //лайки
+    this._element.querySelector('.card__like').addEventListener ('click', () => {
+      this.refreshLikes();
+    })
+    //удаление
+    this._element.querySelector('.card__delete').addEventListener ('click', () => {
+    this._addDeleteButton();
+    })
+    //попап картинки
+    this._element.querySelector('.card__image').addEventListener ('click', () => {
+    this._handleCardClick();
+    })
   }
 
   // addCard(card, container, beginning = false) {
@@ -136,17 +158,6 @@ export default class Card {
   // }
 
 
-
-
-// function refreshLikes(card, json){
-//   card.querySelector('.card__like-count').textContent = json.likes.length;
-//   card.myLike = json.likes.some(liker => liker._id === myID)
-//   if (card.myLike){
-//     card.querySelector('.card__like').classList.add('card__like_set')
-//   } else {
-//     card.querySelector('.card__like').classList.remove('card__like_set')
-//   }
-// }
 
 // function createCard(json) {
 //   const card = cardTemplate.querySelector('.card').cloneNode(true);
