@@ -1,3 +1,4 @@
+// TODO: добавить jsdoc
 export default class UserInfo {
   constructor({ nameUser, jobUser, urlAvatarUser }) {
     this._nameUser = nameUser;
@@ -6,6 +7,7 @@ export default class UserInfo {
 
   }
 
+  // TODO: поправить реализацию
   getUserInfo() {
     const userInfo = {
       name: this._nameUser.textContent,
