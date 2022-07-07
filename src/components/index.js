@@ -64,7 +64,7 @@ Promise.all([cardsApi.getInitialCards(), profileApi.getMe()])
       renderer: (item) => {
         const card = new Card (item, '#card-template');
         const cardElement = card.generate();
-        cardList.setItem(cardElement);
+        cardList.addItem(cardElement);
         // console.log(json)
         // refreshLikes(_element, json)
       }
