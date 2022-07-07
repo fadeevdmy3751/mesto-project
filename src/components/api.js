@@ -2,14 +2,16 @@ import {TOKEN, COHORT} from './secret.js';
 // import {refreshLikes} from "./card.js";
 
 class Api {
-  constructor() {
-    this._config = {
-      baseUrl: 'https://nomoreparties.co/v1/' + COHORT,
-      headers: {
-        authorization: TOKEN,
-        'Content-Type': 'application/json'
-      }
-    }
+  constructor({baseUrl, headers}) {
+    this._baseUrl = baseUrl;
+    this._headers = headers;
+    // this._config = {
+    //   baseUrl: 'https://nomoreparties.co/v1/' + COHORT,
+    //   headers: {
+    //     authorization: TOKEN,
+    //     'Content-Type': 'application/json'
+    //   }
+    // }
   }
 
   // метод выполнения запроса по url-ресурсу
@@ -17,7 +19,7 @@ class Api {
     // формирование тела запроса без body
     const fetchOptions = {
       method: requestMethod,
-      headers: this._config.headers
+      headers: this._headers
     };
 
     // проверка на наличие body и включение в тело запроса
@@ -42,60 +44,60 @@ class Api {
 }
 
 export class AvatarApi extends Api {
-  constructor() {
-    super();
+  constructor({baseUrl, headers}) {
+    super({baseUrl, headers});
     this._avatarBaseUrl = '/users/me/avatar';
   }
 
   // метод редактирования аватара
   editAvatar(url) {
-    return this._makeFetch(this._config.baseUrl + this._avatarBaseUrl,
+    return this._makeFetch(this._baseUrl + this._avatarBaseUrl,
         'PATCH', 'Ошибка editAvatar: ', {avatar: url});
   }
 }
 
 export class ProfileApi extends Api {
-  constructor() {
-    super();
+  constructor({baseUrl, headers}) {
+    super({baseUrl, headers});
     this._profileBaseUrl = '/users/me';
   }
 
   // метод получения данных собственного профиля
   getMe() {
-    return this._makeFetch(this._config.baseUrl + this._profileBaseUrl, 'GET',
+    return this._makeFetch(this._baseUrl + this._profileBaseUrl, 'GET',
         'Ошибка getMe: ');
   }
 
   // метод редактирования собственного профиля
   editProfile(name, about) {
-    return this._makeFetch(this._config.baseUrl + this._profileBaseUrl, 'PATCH',
+    return this._makeFetch(this._baseUrl + this._profileBaseUrl, 'PATCH',
         'Ошибка editProfile: ', {name: name, about: about});
   }
 }
 
 export class CardsApi extends Api {
-  constructor() {
-    super();
+  constructor({baseUrl, headers}) {
+    super({baseUrl, headers});
     this._cardsBaseUrl = '/cards';
     this._cardsLikeBaseUrl = '/cards/likes/';
   }
 
   // метод получения текущих карточек с сервера
   getInitialCards() {
-    return this._makeFetch(this._config.baseUrl + this._cardsBaseUrl, 'GET',
+    return this._makeFetch(this._baseUrl + this._cardsBaseUrl, 'GET',
         'Ошибка getInitialCards: ');
   }
 
   // метод добавления новой карточки на сервер
   addCardOnServer(name, link) {
-    return this._makeFetch(this._config.baseUrl + this._cardsBaseUrl, 'POST',
+    return this._makeFetch(this._baseUrl + this._cardsBaseUrl, 'POST',
         'Ошибка addCardOnServer: ', {name: name, link: link});
   }
 
   // метод удаления выбранной (определяется по event) карточки
   deleteCard(event) {
     const card = event.target.closest('.card');
-    return this._makeFetch(this._config.baseUrl + this._cardsBaseUrl +'/' + card._id, 'DELETE',
+    return this._makeFetch(this._baseUrl + this._cardsBaseUrl +'/' + card._id, 'DELETE',
         'Ошибка deleteCard: ');
   }
 
@@ -118,15 +120,15 @@ export class CardsApi extends Api {
       errorMes = 'Ошибка put like: ';
     }
 
-    return this._makeFetch(this._config.baseUrl + this._cardsLikeBaseUrl + card._id, requestMethod,
+    return this._makeFetch(this._baseUrl + this._cardsLikeBaseUrl + card._id, requestMethod,
         errorMes);
   }
 }
 
 export const api = new Api({
-  baseUrl: 'https://nomoreparties.co/v1/plus-cohort-11',
+  baseUrl: 'https://nomoreparties.co/v1/' + COHORT,
   headers: {
-    authorization: '7da4e682-e653-495f-9d74-1a03b7d57194',
+    authorization: TOKEN,
     'Content-Type': 'application/json'
   }
 });
