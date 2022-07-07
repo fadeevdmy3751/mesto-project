@@ -21,22 +21,40 @@ const popupCloseButtons = document.querySelectorAll('.popup__close')
 const cardTemplate = document.querySelector('#card-template').content;
 const card1 = content.querySelector('.card');
 
-// import  '../pages/index.css';
+import  '../pages/index.css';
 import Popup from './popup.js';
 //import { openPopup, closePopup } from './popup.js';
 //import {addCard, createCard} from './card.js';
+import { COHORT, TOKEN } from "./secret.js";
 import Card from './card.js';
 import Section from './Section.js'
 import {validationParams, clearPopupInputs, enableValidation} from "./validate.js";
+import {FormValidator} from "./FormValidator.js";
 import { CardsApi, ProfileApi, AvatarApi } from './api.js';
 import { refreshProfile } from './utils.js';
 import PopupWithForm from './PopupWithForm.js' ;
 import UserInfo from './UserInfo.js'
 
-const cardsApi = new CardsApi()
-const profileApi = new ProfileApi()
-const userInfo = new UserInfo({ profileName, profileDescription, profileAvatar });
+const apiConfig = {
+  baseUrl: 'https://nomoreparties.co/v1/' + COHORT,
+  headers: {
+    authorization: TOKEN,
+    'Content-Type': 'application/json'
+  }
+}
 
+// const validationParams = {
+//   formSelector: '.form',
+//   inputSelector: '.form__field',
+//   submitButtonSelector: '.form__button',
+//   inactiveButtonClass: 'form__button_disabled',
+//   inputErrorClass: 'form__field_error',
+//   errorClass: 'form__error_visible',
+// }
+
+const cardsApi = new CardsApi(apiConfig);
+const profileApi = new ProfileApi(apiConfig);
+const userInfo = new UserInfo({ profileName, profileDescription, profileAvatar });
 
 Promise.all([cardsApi.getInitialCards(), profileApi.getMe()])
   .then(([cardsInfo, userInfo]) => {
