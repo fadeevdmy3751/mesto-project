@@ -7,7 +7,7 @@ export default class Popup {
    * @param selector - селектор попапа.
    */
   constructor (selector) {
-    this.setEventListeners = this.setEventListeners.bind(this)
+    this._setEventListeners = this.setEventListeners.bind(this)
     this._handleEscClose = this._handleEscClose.bind(this);
     this.selector = selector
   };
@@ -18,7 +18,7 @@ export default class Popup {
   open() {
     this.selector.classList.add('popup_opened');
     document.addEventListener('keyup', this._handleEscClose);
-    document.addEventListener('mousedown', this.setEventListeners);
+    document.addEventListener('mousedown', this._setEventListeners);
   };
 
   /**
@@ -27,7 +27,7 @@ export default class Popup {
   close() {
     this.selector.classList.remove('popup_opened');
     document.removeEventListener('keyup', this._handleEscClose);
-    document.removeEventListener('mousedown', this.setEventListeners);
+    document.removeEventListener('mousedown', this._setEventListeners);
   };
 
   /**
