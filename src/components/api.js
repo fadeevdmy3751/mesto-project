@@ -1,22 +1,27 @@
-import {TOKEN, COHORT} from './secret.js';
+// import {TOKEN, COHORT} from './secret.js';
 // import {refreshLikes} from "./card.js";
 
+/**
+ * Абстрактный класс по работе с Api, от которого наследуются классы для соответствующих элементов страницы
+ */
 class Api {
-  constructor({baseUrl, headers}) {
-    this._baseUrl = baseUrl;
+  /**
+   * Конструктор класса
+   * @param headers - хедеры, передаваемые в запросах (токен авторизации и Content-Type)
+   */
+  constructor(headers) {
     this._headers = headers;
-    // this._config = {
-    //   baseUrl: 'https://nomoreparties.co/v1/' + COHORT,
-    //   headers: {
-    //     authorization: TOKEN,
-    //     'Content-Type': 'application/json'
-    //   }
-    // }
   }
 
-  // метод выполнения запроса по url-ресурсу
+  /**
+   * Метод выполнения запроса по url-ресурсу
+   * @param fetchResource - нужный урл на REST-сервере;
+   * @param requestMethod - метод запроса (GET, POST и т.д.) в формате строки;
+   * @param errorMes - сообщение, выводимое при ошибке, вернувшейся с сервера;
+   * @param requestBody - тело запроса.
+   * @returns возвращается или json, или Promise.reject
+   */
   _makeFetch(fetchResource, requestMethod, errorMes, requestBody = undefined) {
-    // формирование тела запроса без body
     const fetchOptions = {
       method: requestMethod,
       headers: this._headers
@@ -31,9 +36,12 @@ class Api {
         .then(res => this._checkResponse(res, errorMes))
   }
 
-  // метод проверки ответа от сервера на наличие ошибки
-  // при её наличии - возврат Promise.reject
-  // если всё ок - возврат полученного сообщения в json
+  /**
+   * Метод проверки ответа от сервера на наличие ошибки
+   * @param res - ответ сервера;
+   * @param errorMes - сообщение, выводимое при ошибке, вернувшейся с сервера.
+   * @returns возвращается или json, или Promise.reject
+   */
   _checkResponse(res, errorMes) {
     if (res.ok) {
       return res.json();
@@ -43,69 +51,123 @@ class Api {
   }
 }
 
+/**
+ * Класс по работе с Api аватарки пользователя
+ */
 export class AvatarApi extends Api {
+  /**
+   * Конструктор класса по работе с Api аватарки пользователя
+   * @param baseUrl - базовый урл сервера, к которому будет конкатенироваться оставшаяся часть соответствующего адреса
+   * REST-сервера;
+   * @param headers - хедеры, передаваемые в запросе.
+   */
   constructor({baseUrl, headers}) {
-    super({baseUrl, headers});
-    this._avatarBaseUrl = '/users/me/avatar';
+    super(headers);
+    this._avatarUrl = baseUrl + '/users/me/avatar';
   }
 
-  // метод редактирования аватара
+  /**
+   * Метод редактирования аватара
+   * @param url - урл нового аватара.
+   * @returns возвращается или json, или Promise.reject
+   */
   editAvatar(url) {
-    return this._makeFetch(this._baseUrl + this._avatarBaseUrl,
+    return this._makeFetch(this._avatarUrl,
         'PATCH', 'Ошибка editAvatar: ', {avatar: url});
   }
 }
 
+/**
+ * Класс по работе с Api профиля пользователя
+ */
 export class ProfileApi extends Api {
+  /**
+   * Конструктор класса по работе с Api профиля пользователя
+   * @param baseUrl - базовый урл сервера, к которому будет конкатенироваться оставшаяся часть соответствующего адреса
+   * REST-сервера;
+   * @param headers - хедеры, передаваемые в запросе.
+   */
   constructor({baseUrl, headers}) {
-    super({baseUrl, headers});
-    this._profileBaseUrl = '/users/me';
+    super(headers);
+    this._profileUrl = baseUrl + '/users/me';
   }
 
-  // метод получения данных собственного профиля
+  /**
+   * Метод получения данных собственного профиля
+   * @returns возвращается или json, или Promise.reject
+   */
   getMe() {
-    return this._makeFetch(this._baseUrl + this._profileBaseUrl, 'GET',
+    return this._makeFetch(this._profileUrl, 'GET',
         'Ошибка getMe: ');
   }
 
-  // метод редактирования собственного профиля
+  /**
+   * Метод редактирования собственного профиля
+   * @param name - имя пользователя
+   * @param about - описание пользователя
+   * @returns возвращается или json, или Promise.reject
+   */
   editProfile(name, about) {
-    return this._makeFetch(this._baseUrl + this._profileBaseUrl, 'PATCH',
+    return this._makeFetch(this._profileUrl, 'PATCH',
         'Ошибка editProfile: ', {name: name, about: about});
   }
 }
 
+/**
+ * Класс по работе с Api карточек
+ */
 export class CardsApi extends Api {
+  /**
+   * Конструктор класса по работе с Api карточек
+   * @param baseUrl - базовый урл сервера, к которому будет конкатенироваться оставшаяся часть соответствующего адреса
+   * REST-сервера;
+   * @param headers - хедеры, передаваемые в запросе.
+   */
   constructor({baseUrl, headers}) {
-    super({baseUrl, headers});
-    this._cardsBaseUrl = '/cards';
-    this._cardsLikeBaseUrl = '/cards/likes/';
+    super(headers);
+    this._cardsBaseUrl = baseUrl + '/cards';
+    this._cardsLikeUrl = baseUrl + '/cards/likes/';
   }
 
-  // метод получения текущих карточек с сервера
+  /**
+   * Метод получения текущих карточек с сервера
+   * @returns возвращается или json, или Promise.reject
+   */
   getInitialCards() {
-    return this._makeFetch(this._baseUrl + this._cardsBaseUrl, 'GET',
+    return this._makeFetch(this._cardsBaseUrl, 'GET',
         'Ошибка getInitialCards: ');
   }
 
-  // метод добавления новой карточки на сервер
+  /**
+   * Метод добавления новой карточки на сервер
+   * @param name - имя новой карточки;
+   * @param link - ссылка на картинку для новой карточки.
+   * @returns возвращается или json, или Promise.reject
+   */
   addCardOnServer(name, link) {
-    return this._makeFetch(this._baseUrl + this._cardsBaseUrl, 'POST',
+    return this._makeFetch(this._cardsLikeUrl, 'POST',
         'Ошибка addCardOnServer: ', {name: name, link: link});
   }
 
-  // метод удаления выбранной (определяется по event) карточки
+  /**
+   * Метод удаления выбранной (определяется по event) карточки
+   * @param event - event произошедшего события в EventListener.
+   * @returns возвращается или json, или Promise.reject
+   */
   deleteCard(event) {
     const card = event.target.closest('.card');
-    return this._makeFetch(this._baseUrl + this._cardsBaseUrl +'/' + card._id, 'DELETE',
+    return this._makeFetch(this._cardsBaseUrl +'/' + card._id, 'DELETE',
         'Ошибка deleteCard: ');
   }
 
-  // метод присвоения/удаления лайка карточке
+  /**
+   * Метод присвоения/удаления лайка карточке
+   * @param event - event произошедшего события в EventListener.
+   * @returns возвращается или json, или Promise.reject
+   */
   likeCard(event) {
     console.log(event)
     const card = event.target.closest('.card');
-
 
     // инициализация параметров
     let requestMethod = '';
@@ -120,18 +182,18 @@ export class CardsApi extends Api {
       errorMes = 'Ошибка put like: ';
     }
 
-    return this._makeFetch(this._baseUrl + this._cardsLikeBaseUrl + card._id, requestMethod,
+    return this._makeFetch(this._cardsLikeUrl + card._id, requestMethod,
         errorMes);
   }
 }
 
-export const api = new Api({
-  baseUrl: 'https://nomoreparties.co/v1/' + COHORT,
-  headers: {
-    authorization: TOKEN,
-    'Content-Type': 'application/json'
-  }
-});
+// export const api = new Api({
+//   baseUrl: 'https://nomoreparties.co/v1/' + COHORT,
+//   headers: {
+//     authorization: TOKEN,
+//     'Content-Type': 'application/json'
+//   }
+// });
 
 
 // из старого кода - конфиг хедера для подключения к серверу
