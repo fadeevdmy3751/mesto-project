@@ -60,7 +60,7 @@ Promise.all([cardsApi.getInitialCards(), profileApi.getMe()])
   .then(([cardsInfo, userInfo]) => {
     // console.log('init cards', cardsInfo);
     const cardList = new Section({
-      data: cardsInfo,
+      items: cardsInfo,
       renderer: (item) => {
         const card = new Card (item, '#card-template');
         const cardElement = card.generate();
