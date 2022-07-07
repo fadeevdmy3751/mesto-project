@@ -43,6 +43,7 @@ export default class Popup {
    * Метод, который добавляет слушатель клика иконке закрытия попапа
    * @param evt - event события в EventListener.
    */
+  // TODO: исправить реализацию метода - по заданию он сам должен вешать "слушатель клика иконке закрытия попапа"
   setEventListeners(evt) {
     if (evt.target.classList.contains('popup__close') || evt.target.classList.contains('popup'))
       this.close();
