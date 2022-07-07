@@ -47,21 +47,20 @@ Promise.all([cardsApi.getInitialCards(), profileApi.getMe()])
         const card = new Card (item, '#card-template');
         const cardElement = card.generate();
         cardList.setItem(cardElement);
-        card.addDefaultLike();
-        card.addDeleteButton();
-        card.handleCardClick();
+        // console.log(json)
+        // refreshLikes(_element, json)
       }
     }, '.elements');
 
     cardList.renderItems();
     refreshProfile(userInfo.name, userInfo.about, userInfo.avatar);
-    //  myID = userInfo._id;
+     myID = userInfo._id;
   })
   .catch((err) => {
     console.log(err);
   });
 
-
+  export let myID;
 
 //открыть окно редактирования профиля
 const openPopupProfile = new Popup (profileEditPopup);
@@ -75,29 +74,32 @@ profileEditBtn.addEventListener('click', () => {
 
 
 // Редактирование профиля:
-  const formEditUser = new PopupWithForm (profileEditPopup, {
-    handleSubmit: (data) => {
+const formEditUser = new PopupWithForm (profileEditPopup, {
+  handleSubmit: (data) => {
+    console.log(data)
+    profileEditForm.querySelector('.form__button').textContent = "Сохранение...";
+    const profileApi = new ProfileApi();
+    profileApi.editProfile(nameInput.value, descriptionInput.value)
+      .then((json) => {
+        console.log('userinfo updated', json);
+        refreshProfile(json.name, json.about)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+    .finally(() => {
+      profileEditForm.textContent = "Сохранить";
       console.log(data)
-      profileEditForm.querySelector('.form__button').textContent = "Сохранение...";
-      profileApi.getMe(data)
-      .then((data) => {
-      userInfo.setUserInfo(data);
-      formEditUser.close();
-      openPopupProfile.close();
-      new Popup ('.popup-profile-edit').close();
-      })
-      .catch((err) => {
-      console.log(err)})
-      .finally(() => {
-        profileEditForm.textContent = "Сохранить";
-        console.log(data)
-      });
-    }
-  });
+      // formEditUser.close();
+      // openPopupProfile.close();
+      // new Popup ('.popup-profile-edit').close();
+    });
+  }
+});
 
-  profileEditForm.addEventListener('submit', () => {
-    formEditUser.close(profileEditPopup);
-  });
+  // profileEditForm.addEventListener('submit', () => {
+
+  // });
 
 // profileEditForm.addEventListener('submit', evt => {
 //   evt.preventDefault();
