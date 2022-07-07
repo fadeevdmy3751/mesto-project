@@ -1,51 +1,74 @@
+/**
+ * Класс валидации полей указанной формы.
+ */
 export class FormValidator {
-  constructor({formSelector, inputSelector, submitButtonSelector,
-              inactiveButtonClass, inputErrorClass, errorClass}) {
-    this._formSelector = formSelector;
+  /**
+   * Конструктор - на входе объект настроек с селекторами и классами формы, а также вторым параметром элемент
+   * той формы, которая валидируется.
+   * @param inputSelector - селектор полей ввода данных
+   * @param submitButtonSelector - селектор кнпоки отправки данных (submit)
+   * @param inactiveButtonClass - класс неактивной кнопки
+   * @param inputErrorClass - класс ошибки для поля ввода (красные рамки)
+   * @param errorClass - класс сообщения об ошибке для поля ввода
+   * @param formElement - валидируемая форма
+   */
+  constructor({inputSelector, submitButtonSelector,
+              inactiveButtonClass, inputErrorClass, errorClass}, formElement) {
     this._inputSelector = inputSelector;
     this._submitButtonSelector = submitButtonSelector;
     this._inactiveButtonClass = inactiveButtonClass;
     this._inputErrorClass = inputErrorClass;
     this._errorClass = errorClass;
+    this._formElement = formElement;
   }
 
+  /**
+   * Метод активации валидации формы
+   */
   enableValidation() {
-    const formList = Array.from(document.querySelectorAll(this._formSelector));
-    formList.forEach((formElement) => {
-      formElement.addEventListener('submit', (evt) => {
-        evt.preventDefault();
-      });
-      this._setEventListeners(formElement);
+    this._formElement.addEventListener('submit', (evt) => {
+      evt.preventDefault();
     });
+    this._setEventListeners();
   }
 
+  /**
+   * Метод очищения полей формы
+   * @param popup - попап формы
+   */
   clearPopupInputs(popup) {
-    const formElement = popup.querySelector(this._formSelector);
     const inputList = Array.from(popup.querySelectorAll(this._inputSelector));
-    const buttonElement = formElement.querySelector(this._submitButtonSelector);
+    const buttonElement = this._formElement.querySelector(this._submitButtonSelector);
     inputList.forEach((inputElement) => {
-      this._hideInputError(formElement, inputElement, this._inputErrorClass, this._errorClass);
+      this._hideInputError(this._formElement, inputElement, this._inputErrorClass, this._errorClass);
       inputElement.value = ''
     });
     this._toggleButtonState(inputList, buttonElement, this._inactiveButtonClass);
   }
 
-  _setEventListeners(formElement) {
-    // метод добавления обработчиков всем полям формы
-    const inputList = Array.from(formElement.querySelectorAll(this._inputSelector));
-    const buttonElement = formElement.querySelector(this._submitButtonSelector);
+  /**
+   * Метод добавления EventListener к элементам формы
+   */
+  _setEventListeners() {
+    const inputList = Array.from(this._formElement.querySelectorAll(this._inputSelector));
+    const buttonElement = this._formElement.querySelector(this._submitButtonSelector);
     this._toggleButtonState(inputList, buttonElement, this._inactiveButtonClass);
 
     inputList.forEach((inputElement) => {
       inputElement.addEventListener('input', function () {
-        this.this._isValid(formElement, inputElement, this._inputErrorClass, this._errorClass);
+        this.this._isValid(inputElement, this._inputErrorClass, this._errorClass);
         this.this._toggleButtonState (inputList, buttonElement, this._inactiveButtonClass);
       });
     });
   }
 
+  /**
+   * Отключение и включение кнопки submit
+   * @param inputList - список всех инпутов формы
+   * @param buttonElement - элемент кнопки (submit)
+   * @param inactiveButtonClass - класс неактивной кнопки (submit)
+   */
   _toggleButtonState(inputList, buttonElement, inactiveButtonClass) {
-    // отключение и включение кнопки submit
     if (this._hasInvalidInput(inputList)){
       buttonElement.classList.add(inactiveButtonClass)
       buttonElement.disabled = true;
@@ -55,31 +78,54 @@ export class FormValidator {
     }
   }
 
+  /**
+   * Проверка наличия хотя бы одного инпут-инвалида
+   * @param inputList - список инпутов формы
+   * @returns {*} - флаг (boolean) наличия хотя бы одного инпут-инвалида
+   */
   _hasInvalidInput(inputList) {
-    // проверка наличия хотя бы одного инпут-инвалида
     return inputList.some((inputElement) => {
       return !inputElement.validity.valid;
     })
   }
 
-  _isValid(formElement, inputElement, inputErrorClass, errorClass) {
+  /**
+   * Валидация инпута и отображение ошибки при наличиию
+   * @param inputElement - валидируемый инпут
+   * @param inputErrorClass - класс инпута с ошибкой
+   * @param errorClass - класс сообщения об ошибке в указанном инпуте
+   */
+  _isValid(inputElement, inputErrorClass, errorClass) {
     if (!inputElement.validity.valid) {
-      this._showInputError(formElement, inputElement, inputElement.validationMessage, inputErrorClass, errorClass);
+      this._showInputError(inputElement, inputElement.validationMessage, inputErrorClass, errorClass);
     } else {
-      this._hideInputError(formElement, inputElement, inputErrorClass, errorClass);
+      this._hideInputError(inputElement, inputErrorClass, errorClass);
     }
   };
 
-  _showInputError(formElement, inputElement, errorMessage, inputErrorClass, errorClass) {
-    const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
+  /**
+   * Метод конфигурирования отображения инпута с ошибкой
+   * @param inputElement - инпут с ошибочно введёнными в него данными
+   * @param errorMessage - сообщение об ошибке
+   * @param inputErrorClass - класс инпута с ошибкой
+   * @param errorClass - класс сообщения об ошибке в указанном инпуте
+   */
+  _showInputError(inputElement, errorMessage, inputErrorClass, errorClass) {
+    const errorElement = this._formElement.querySelector(`.${inputElement.id}-error`);
 
     inputElement.classList.add(inputErrorClass);
     errorElement.textContent = errorMessage;
     errorElement.classList.add(errorClass);
   }
 
-  _hideInputError(formElement, inputElement, inputErrorClass, errorClass) {
-    const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
+  /**
+   * Метод конфигурирования отображения инпута без ошибки
+   * @param inputElement - инпут с ошибочно введёнными в него данными
+   * @param inputErrorClass - класс инпута с ошибкой
+   * @param errorClass - класс сообщения об ошибке в указанном инпуте
+   */
+  _hideInputError(inputElement, inputErrorClass, errorClass) {
+    const errorElement = this._formElement.querySelector(`.${inputElement.id}-error`);
 
     inputElement.classList.remove(inputErrorClass);
     errorElement.classList.remove(errorClass);
