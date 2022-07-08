@@ -1,4 +1,3 @@
-// TODO: добавить jsdoc
 /**
  * Класс управления информацией о пользователе на странице
  */
@@ -41,7 +40,7 @@ export default class UserInfo {
     if(about)
       document.querySelector(this._userAboutSelector).textContent = about;
     if(avatar)
-      document.querySelector(this._userAboutSelector).style.backgroundImage = `url('${avatar}')`;
+      document.querySelector(this._userAvatarSelector).style.backgroundImage = `url('${avatar}')`;
   }
 
   /**
