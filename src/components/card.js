@@ -5,33 +5,25 @@ export const bigImgCaption = bigImgPopup.querySelector('.big-img__caption');
 const cardTemplate = document.querySelector('#card-template').content;
 
 import PopupWithImage from './PopupWithImage.js';
-import { CardsApi } from './api.js'
-// import Popup from './popup.js';
-import {myID} from "./index.js";   // перекрестный импорт хз как работает
+// import {myID} from "./index.js";   // перекрестный импорт хз как работает
+
 // import {deleteCard, likeCard} from "./api.js";
+// import Popup from './popup.js';
+// import { CardsApi } from './api.js'
 
 export default class Card {
-  constructor(data, selector, userId, myId){
-    this._selector = (selector);
+  constructor(data, selector, myId, handleCardClick) {
+    this._selector = selector;
     this._name = data.name;
     this._likesLength = data.likes.length; //колличество лайков
     this._link = data.link;
     this._likes = data.likes;
-    this._cardId = data.owner._id; //owner._id - автор карточки
-    this._userId = userId;
-    // this._CardsApi = CardsApi
+    this._cardOwnerId = data.owner._id; //owner._id - автор карточки
     this._myID = myId;
+    this._handleCardClick = handleCardClick;
+    // this._CardsApi = CardsApi
+    // this._myID = myId;
     // console.log(this._cardId)
-  }
-
-  _getElement() {
-    const cardElement = document
-      .querySelector(this._selector)
-      .content
-      .querySelector('.card')
-      .cloneNode(true);
-
-    return cardElement;
   }
 
   generate() {
@@ -44,28 +36,35 @@ export default class Card {
     this._element.querySelector('.card__name').textContent = this._name;
     this._element.querySelector('.card__image').alt = this._name;
     this._element.querySelector('.card__like-count').textContent = this._likesLength;
-    this._element.id = this._cardId;
+    this._element.id = this._cardOwnerId;
     return this._element;
   }
 
-  _handleCardClick() {
-    const cardPopup = new PopupWithImage(bigImgPopup, this._link, this._name);
-    bigImage.src = this._link;
-    bigImgCaption.textContent = this._name;
-    cardPopup.open();
-
+  _getElement() {
+    return document
+      .querySelector(this._selector)
+      .content
+      .querySelector('.card')
+      .cloneNode(true);
   }
+
+  // _handleCardClick() {
+  //   const cardPopup = new PopupWithImage(bigImgPopup, this._link, this._name);
+  //   bigImage.src = this._link;
+  //   bigImgCaption.textContent = this._name;
+  //   cardPopup.open();
+  // }
 
   _addDefaultLike() {
     this._likes.forEach((item) => {
-        if (this._userId === item._id) {
+        if (this._myID === item._id) {  // проверка, есть ли мой ID в числе тех, кто ставил like карточке
             this._element.querySelector('.card__like').classList.add('card__like_set');
         }
     })
   }
 
   _addDeleteButton() {
-    if (this._userId === this._cardId) {
+    if (this._myID === this._cardOwnerId) {
         this._element.querySelector('.card__delete');
     } else {
         this._element.querySelector('.card__delete').style.display = 'none';
@@ -73,29 +72,33 @@ export default class Card {
   }
 
 
-  refreshLikes(card, json) {
-    card.querySelector('.card__like-count').textContent = json.likes.length;
-    card.myLike = json.likes.some(liker => liker._id === myID)
-    if (card.myLike){
-      card.querySelector('.card__like').classList.add('card__like_set')
+  _refreshLikes() {
+    // this._element.querySelector('.card__like-count').textContent = ++this._likesLength;
+    const likedByMe = this._likes.some(liker => liker._id === this._myID) // определение, ставил ли я лайк до события
+    if (!likedByMe) {
+      this._likesLength += 1
+      this._element.querySelector('.card__like-count').textContent = this._likesLength
+      this._element.querySelector('.card__like').classList.add('card__like_set')
     } else {
-      card.querySelector('.card__like').classList.remove('card__like_set')
+      this._likesLength -= 1
+      this._element.querySelector('.card__like-count').textContent = this._likesLength
+      this._element.querySelector('.card__like').classList.remove('card__like_set')
     }
   }
 
 
   _setEventListeners() {
     //лайки
-    this._element.querySelector('.card__like').addEventListener ('click', () => {
-      this.refreshLikes();
+    this._element.querySelector('.card__like').addEventListener('click', () => {
+      this._refreshLikes();
     })
     //удаление
-    this._element.querySelector('.card__delete').addEventListener ('click', () => {
-    this._addDeleteButton();
+    this._element.querySelector('.card__delete').addEventListener('click', () => {
+      this._addDeleteButton();
     })
     //попап картинки
-    this._element.querySelector('.card__image').addEventListener ('click', () => {
-    this._handleCardClick();
+    this._element.querySelector('.card__image').addEventListener('click', () => {
+      this._handleCardClick(bigImgPopup, this._link, this._name);
     })
   }
 

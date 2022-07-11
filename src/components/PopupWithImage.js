@@ -23,7 +23,7 @@ export default class PopupWithImage extends Popup {
    */
   open() {
     super.open();
-    this.selector.classList.add('popup_opened');
+    // this.selector.classList.add('popup_opened');
     document.querySelector('.big-img__image').src = this.cardImg;
     document.querySelector('.big-img__caption').textContent = this.cardText;
     document.querySelector('.big-img__image').alt = this.cardText;

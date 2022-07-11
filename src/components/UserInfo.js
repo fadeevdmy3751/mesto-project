@@ -14,18 +14,34 @@ export default class UserInfo {
    * @param userAboutSelector - селектор элемента информации о себе;
    * @param userAvatarSelector - селектор аватарки пользователя.
    */
-  constructor({userNameSelector, userAboutSelector, userAvatarSelector}) {
+  constructor({userNameSelector, userAboutSelector, userAvatarSelector},
+              {userName, userAbout, userAvatar}) {
     this._userNameSelector = userNameSelector;
     this._userAboutSelector = userAboutSelector;
     this._userAvatarSelector = userAvatarSelector;
+    this._userName = userName;
+    this._userAbout = userAbout;
+    this._userAvatar = userAvatar;
   }
 
   /**
    * Метод, возвращающий объект с данными пользователя
-   * @param apiMethod - метод класса Api для получения информации о пользователе (включая аватарку)
    */
-  getUserInfo(apiMethod) {
-    return apiMethod;
+  getUserInfo() {
+    return {
+      userName: this._userName,
+      userAbout: this._userAbout,
+      userAvatar: this._userAvatar,
+    };
+  }
+
+  /**
+   * Метод, отобраджающий пользовательские данные на странице
+   */
+  showUserInfo() {
+    document.querySelector(this._userNameSelector).textContent = this._userName;
+    document.querySelector(this._userAboutSelector).textContent = this._userAbout;
+    document.querySelector(this._userAvatarSelector).style.backgroundImage = this._userAvatar;
   }
 
   /**
@@ -35,12 +51,19 @@ export default class UserInfo {
    * @param avatar - аватар пользователя из объекта.
    */
   refreshUserInfo({name=null, about = null, avatar = null}) {
-    if(name)
-      document.querySelector(this._userNameSelector).textContent = name;
-    if(about)
-      document.querySelector(this._userAboutSelector).textContent = about;
-    if(avatar)
-      document.querySelector(this._userAvatarSelector).style.backgroundImage = `url('${avatar}')`;
+    if(name) {
+      this._userName = name;
+      // document.querySelector(this._userNameSelector).textContent = name;
+    }
+    if(about) {
+      this._userAbout = about;
+      // document.querySelector(this._userAboutSelector).textContent = about;
+    }
+    if(avatar) {
+      this._userAvatar = avatar;
+      // document.querySelector(this._userAvatarSelector).style.backgroundImage = `url('${avatar}')`;
+    }
+    this.showUserInfo();
   }
 
   /**

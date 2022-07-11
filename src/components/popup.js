@@ -6,9 +6,9 @@ export default class Popup {
    * Конструктор класса
    * @param selector - селектор попапа.
    */
-  constructor (selector) {
-    this._setEventListeners = this.setEventListeners.bind(this)
-    this._handleEscClose = this._handleEscClose.bind(this);
+  constructor(selector) {
+    // this._setEventListeners = this.setEventListeners.bind(this)
+    // this._handleEscClose = this._handleEscClose.bind(this);
     this.selector = selector
   };
 
@@ -17,8 +17,9 @@ export default class Popup {
    */
   open() {
     this.selector.classList.add('popup_opened');
-    document.addEventListener('keyup', this._handleEscClose);
-    document.addEventListener('mousedown', this._setEventListeners);
+    this.setEventListeners();
+    // document.addEventListener('keyup', () => this._handleEscClose);
+    // document.addEventListener('mousedown', () => this.setEventListeners);
   };
 
   /**
@@ -26,28 +27,35 @@ export default class Popup {
    */
   close() {
     this.selector.classList.remove('popup_opened');
-    document.removeEventListener('keyup', this._handleEscClose);
-    document.removeEventListener('mousedown', this._setEventListeners);
+    document.removeEventListener('keyup', (evt) => this._handleEscClose(evt));
+    document.removeEventListener('mousedown', (evt) => this._handleClosePopup(evt));
   };
+
+  /**
+   * Метод, который добавляет слушатель клика иконке закрытия попапа
+   */
+  setEventListeners() {
+    document.addEventListener('keyup', (evt) => this._handleEscClose(evt));
+    document.addEventListener('mousedown', (evt) => this._handleClosePopup(evt));
+  }
 
   /**
    * Метод, который содержит логику закрытия попапа клавишей Esc
    * @param evt - event события в EventListener.
    */
-  _handleEscClose(evt){
+  _handleEscClose(evt) {
     if (evt.key === "Escape")
       this.close();
   };
 
   /**
-   * Метод, который добавляет слушатель клика иконке закрытия попапа
+   * Метод, который содержит логику закрытия попапа
    * @param evt - event события в EventListener.
    */
-  // TODO: исправить реализацию метода - по заданию он сам должен вешать "слушатель клика иконке закрытия попапа"
-  setEventListeners(evt) {
+  _handleClosePopup(evt) {
     if (evt.target.classList.contains('popup__close') || evt.target.classList.contains('popup'))
       this.close();
-  };
+  }
 }
 
 

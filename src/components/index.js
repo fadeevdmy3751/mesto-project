@@ -52,17 +52,31 @@ const apiConfig = {
 //   errorClass: 'form__error_visible',
 // }
 
+
+
 const cardsApi = new CardsApi(apiConfig);
 const profileApi = new ProfileApi(apiConfig);
-const userInfo = new UserInfo({ profileName, profileDescription, profileAvatar });
+// const userInfo = new UserInfo({ profileName, profileDescription, profileAvatar });
 
 Promise.all([cardsApi.getInitialCards(), profileApi.getMe()])
-  .then(([cardsInfo, userInfo]) => {
-    // console.log('init cards', cardsInfo);
+  .then(([cardsInfo, myProfileInfo]) => {
+    console.log('myID', myProfileInfo);
+    console.log('init cards', cardsInfo);
+    const myProfile = new UserInfo(
+      {
+        userNameSelector: profileName,
+        userAboutSelector: profileDescription,
+        userAvatarSelector: profileAvatar
+      },
+      {
+        userName: myProfileInfo.name,
+        userAbout: myProfileInfo.about,
+        userAvatar: myProfileInfo.avatar
+      })
     const cardList = new Section({
       items: cardsInfo,
       renderer: (item) => {
-        const card = new Card (item, '#card-template');
+        const card = new Card (item, '#card-template', myProfileInfo._id);
         const cardElement = card.generate();
         cardList.addItem(cardElement);
         // console.log(json)
@@ -71,14 +85,15 @@ Promise.all([cardsApi.getInitialCards(), profileApi.getMe()])
     }, '.elements');
 
     cardList.renderItems();
-    refreshProfile(userInfo.name, userInfo.about, userInfo.avatar);
-     myID = userInfo._id;
+    myProfile.showUserInfo();
+    // refreshProfile(myProfileInfo.name, myProfileInfo.about, myProfileInfo.avatar);
+     //  myID = myProfileInfo._id;
   })
   .catch((err) => {
     console.log(err);
   });
 
-  export let myID;
+  // export let myID;
 
 //открыть окно редактирования профиля
 const openPopupProfile = new Popup (profileEditPopup);
