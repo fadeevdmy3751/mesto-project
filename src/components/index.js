@@ -1,3 +1,5 @@
+import PopupWithImage from "./PopupWithImage";
+
 const content = document.querySelector('.content');
 const profileAvatar = content.querySelector('.profile__avatar');
 const avatarEditPopup = document.querySelector('.popup-avatar-edit');
@@ -12,6 +14,7 @@ const descriptionInput = profileEditPopup.querySelector('#form__field-profession
 const avatarInput = avatarEditForm.querySelector('#form__field-ava');
 const cardAddPopup = document.querySelector('.popup-card-add'); // уточнить класс
 const cardAddBtn = content.querySelector('.profile__add-button');
+const bigImgPopup = document.querySelector('.big-img');
 const cardAddForm = cardAddPopup.querySelector('.form[name="popup-card-add-form"]'); // уточнить класс или name
 const cardNameInput = cardAddPopup.querySelector('#card-add-name');
 const cardLinkInput = cardAddPopup.querySelector('#card-add-link');
@@ -76,7 +79,10 @@ Promise.all([cardsApi.getInitialCards(), profileApi.getMe()])
     const cardList = new Section({
       items: cardsInfo,
       renderer: (item) => {
-        const card = new Card (item, '#card-template', myProfileInfo._id, (card) => cardsApi.likeCard(card));
+        const cardPopup = new PopupWithImage(bigImgPopup, item.link, item.name);
+        const card = new Card (item, '#card-template', myProfileInfo._id,
+          () => cardPopup.open(),
+          (card) => cardsApi.likeCard(card));
         const cardElement = card.generate();
         cardList.addItem(cardElement);
       }

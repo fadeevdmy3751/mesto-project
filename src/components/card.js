@@ -3,28 +3,17 @@ export const bigImage = bigImgPopup.querySelector('.big-img__image');
 export const bigImgCaption = bigImgPopup.querySelector('.big-img__caption');
 const cardTemplate = document.querySelector('#card-template').content;
 
-import PopupWithImage from './PopupWithImage.js';
-import {CardsApi} from "./api";
-
-// import {deleteCard, likeCard} from "./api.js";
-// import Popup from './popup.js';
-// import { CardsApi } from './api.js'
-
 export default class Card {
-  constructor(data, selector, myId, handleCardLike) {
+  constructor(data, selector, myId, handleCardClick, handleCardLike) {
     this._selector = selector;
     this._name = data.name;
-    // this._likesLength = data.likes.length; //колличество лайков
     this._link = data.link;
     this._likes = data.likes;
     this._id = data._id;
     this._cardOwnerId = data.owner._id; //owner._id - автор карточки
     this._myID = myId;
-    //this._handleCardClick = handleCardClick;
+    this._handleCardClick = handleCardClick;
     this._handleCardLike = handleCardLike
-    // this._CardsApi = CardsApi
-    // this._myID = myId;
-    // console.log(this._cardId)
   }
 
   generate() {
@@ -48,13 +37,6 @@ export default class Card {
       .querySelector('.card')
       .cloneNode(true);
   }
-
-  // _handleCardClick() {
-  //   const cardPopup = new PopupWithImage(bigImgPopup, this._link, this._name);
-  //   bigImage.src = this._link;
-  //   bigImgCaption.textContent = this._name;
-  //   cardPopup.open();
-  // }
 
   _addDefaultLike() {
     this._likes.forEach((item) => {
@@ -104,16 +86,9 @@ export default class Card {
     })
     //попап картинки
     this._element.querySelector('.card__image').addEventListener('click', () => {
-      this._handleCardClick(bigImgPopup, this._link, this._name);
+      this._handleCardClick();
     })
   }
-
-  // addCard(card, container, beginning = false) {
-  //   if(!beginning)
-  //     container.append(card);
-  //   else
-  //     container.prepend(card);
-  // }
 }
 
 
