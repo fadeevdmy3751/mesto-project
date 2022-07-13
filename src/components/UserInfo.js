@@ -2,46 +2,28 @@
  * Класс управления информацией о пользователе на странице
  */
 export default class UserInfo {
-  // constructor({ nameUser, jobUser, urlAvatarUser }) {
-  //   this._nameUser = nameUser;
-  //   this._jobUser = jobUser;
-  //   this._urlAvatarUser = urlAvatarUser;
-  //
-  // }
   /**
    * Конструктор класса
    * @param userNameSelector - селектор имени пользователя;
    * @param userAboutSelector - селектор элемента информации о себе;
    * @param userAvatarSelector - селектор аватарки пользователя.
    */
-  constructor({userNameSelector, userAboutSelector, userAvatarSelector},
-              {userName, userAbout, userAvatar}) {
+  constructor({userNameSelector, userAboutSelector, userAvatarSelector}) {
     this._userNameSelector = userNameSelector;
     this._userAboutSelector = userAboutSelector;
     this._userAvatarSelector = userAvatarSelector;
-    this._userName = userName;
-    this._userAbout = userAbout;
-    this._userAvatar = userAvatar;
   }
 
   /**
    * Метод, возвращающий объект с данными пользователя
    */
   getUserInfo() {
+    const imgUrl = document.querySelector(this._userAvatarSelector).style.backgroundImage.slice(4, -1).replace(/"/g, "");
     return {
-      userName: this._userName,
-      userAbout: this._userAbout,
-      userAvatar: this._userAvatar,
+      userName: document.querySelector(this._userNameSelector).textContent,
+      userAbout: document.querySelector(this._userAboutSelector).textContent,
+      userAvatar: imgUrl
     };
-  }
-
-  /**
-   * Метод, отобраджающий пользовательские данные на странице
-   */
-  showUserInfo() {
-    this._userNameSelector.textContent = this._userName;
-    this._userAboutSelector.textContent = this._userAbout;
-    this._userAvatarSelector.style.backgroundImage = `url('${this._userAvatar}')`;
   }
 
   /**
@@ -52,18 +34,14 @@ export default class UserInfo {
    */
   refreshUserInfo({name=null, about = null, avatar = null}) {
     if(name) {
-      this._userName = name;
-      // document.querySelector(this._userNameSelector).textContent = name;
+      document.querySelector(this._userNameSelector).textContent = name;
     }
     if(about) {
-      this._userAbout = about;
-      // document.querySelector(this._userAboutSelector).textContent = about;
+      document.querySelector(this._userAboutSelector).textContent = about;
     }
     if(avatar) {
-      this._userAvatar = avatar;
-      // document.querySelector(this._userAvatarSelector).style.backgroundImage = `url('${avatar}')`;
+      document.querySelector(this._userAvatarSelector).style.backgroundImage = `url('${avatar}')`;
     }
-    this.showUserInfo();
   }
 
   /**

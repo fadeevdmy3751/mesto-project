@@ -1,14 +1,12 @@
 import PopupWithImage from "./PopupWithImage";
 
 const content = document.querySelector('.content');
-const profileAvatar = content.querySelector('.profile__avatar');
 const avatarEditPopup = document.querySelector('.popup-avatar-edit');
 const avatarEditForm = avatarEditPopup.querySelector('.form[name="popup-avatar-edit-form"]');// уточнить класс или name
 const profileEditPopup = document.querySelector('.popup-profile-edit');// уточнить класс
 const profileEditBtn = content.querySelector('.profile__edit-button');
 const profileEditForm = profileEditPopup.querySelector('.form[name="popup-profile-edit-form"]');// уточнить класс или name
-const profileName = content.querySelector('.profile__name');
-const profileDescription = content.querySelector('.profile__description');
+
 const nameInput = profileEditPopup.querySelector('#form__field-name');
 const descriptionInput = profileEditPopup.querySelector('#form__field-profession');
 const avatarInput = avatarEditForm.querySelector('#form__field-ava');
@@ -23,6 +21,10 @@ const popups = document.querySelectorAll('.popup');
 const popupCloseButtons = document.querySelectorAll('.popup__close')
 const cardTemplate = document.querySelector('#card-template').content;
 const card1 = content.querySelector('.card');
+
+const profileName = '.profile__name';
+const profileDescription = '.profile__description';
+const profileAvatar = '.profile__avatar';
 
 import  '../pages/index.css';
 import Popup from './popup.js';
@@ -55,27 +57,17 @@ const apiConfig = {
 //   errorClass: 'form__error_visible',
 // }
 
-
-
 const cardsApi = new CardsApi(apiConfig);
 const profileApi = new ProfileApi(apiConfig);
-// const userInfo = new UserInfo({ profileName, profileDescription, profileAvatar });
+const myProfile = new UserInfo(
+  {
+    userNameSelector: profileName,
+    userAboutSelector: profileDescription,
+    userAvatarSelector: profileAvatar
+  })
 
 Promise.all([cardsApi.getInitialCards(), profileApi.getMe()])
   .then(([cardsInfo, myProfileInfo]) => {
-    // console.log('myID', myProfileInfo);
-    // console.log('init cards', cardsInfo);
-    const myProfile = new UserInfo(
-      {
-        userNameSelector: profileName,
-        userAboutSelector: profileDescription,
-        userAvatarSelector: profileAvatar
-      },
-      {
-        userName: myProfileInfo.name,
-        userAbout: myProfileInfo.about,
-        userAvatar: myProfileInfo.avatar
-      })
     const cardList = new Section({
       items: cardsInfo,
       renderer: (item) => {
@@ -89,7 +81,7 @@ Promise.all([cardsApi.getInitialCards(), profileApi.getMe()])
     }, '.elements');
 
     cardList.renderItems();
-    myProfile.showUserInfo();
+    myProfile.refreshUserInfo({name: myProfileInfo.name, about: myProfileInfo.about, avatar: myProfileInfo.avatar});
   })
   .catch((err) => {
     console.log(err);
@@ -100,8 +92,8 @@ const openPopupProfile = new Popup (profileEditPopup);
 
 profileEditBtn.addEventListener('click', () => {
   clearPopupInputs(profileEditPopup, validationParams);
-  nameInput.value = profileName.textContent;
-  descriptionInput.value = profileDescription.textContent;
+  nameInput.value = document.querySelector(profileName).textContent;
+  descriptionInput.value = document.querySelector(profileDescription).textContent;
   openPopupProfile.open();
 })
 
@@ -179,12 +171,13 @@ profileAvatar.addEventListener('click', () => {
 // });
 
 // Открыть окно добавления карточки
-const openPopupCard = new Popup (cardAddPopup);
-
-cardAddBtn.addEventListener('click', () => {
-  clearPopupInputs(cardAddPopup, validationParams);
-  openPopupCard.open();
-})
+// const openPopupCard = new Popup (cardAddPopup);
+//
+// cardAddBtn.addEventListener('click', () => {
+//   clearPopupInputs(cardAddPopup, validationParams);
+//   openPopupCard.open();
+// })
+const newCardPopup = new PopupWithForm()
 
 
 

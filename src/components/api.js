@@ -163,7 +163,7 @@ export class CardsApi extends Api {
 
   /**
    * Метод присвоения/удаления лайка карточке
-   * @param event - event произошедшего события в EventListener.
+   * @param card - html-элемент карточки
    * @returns возвращается или json, или Promise.reject
    */
   likeCard(card) {
