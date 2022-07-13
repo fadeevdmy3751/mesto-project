@@ -39,9 +39,9 @@ export default class UserInfo {
    * Метод, отобраджающий пользовательские данные на странице
    */
   showUserInfo() {
-    document.querySelector(this._userNameSelector).textContent = this._userName;
-    document.querySelector(this._userAboutSelector).textContent = this._userAbout;
-    document.querySelector(this._userAvatarSelector).style.backgroundImage = this._userAvatar;
+    this._userNameSelector.textContent = this._userName;
+    this._userAboutSelector.textContent = this._userAbout;
+    this._userAvatarSelector.style.backgroundImage = `url('${this._userAvatar}')`;
   }
 
   /**

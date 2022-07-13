@@ -60,8 +60,8 @@ const profileApi = new ProfileApi(apiConfig);
 
 Promise.all([cardsApi.getInitialCards(), profileApi.getMe()])
   .then(([cardsInfo, myProfileInfo]) => {
-    console.log('myID', myProfileInfo);
-    console.log('init cards', cardsInfo);
+    // console.log('myID', myProfileInfo);
+    // console.log('init cards', cardsInfo);
     const myProfile = new UserInfo(
       {
         userNameSelector: profileName,
@@ -76,24 +76,18 @@ Promise.all([cardsApi.getInitialCards(), profileApi.getMe()])
     const cardList = new Section({
       items: cardsInfo,
       renderer: (item) => {
-        const card = new Card (item, '#card-template', myProfileInfo._id);
+        const card = new Card (item, '#card-template', myProfileInfo._id, (card) => cardsApi.likeCard(card));
         const cardElement = card.generate();
         cardList.addItem(cardElement);
-        // console.log(json)
-        // refreshLikes(_element, json)
       }
     }, '.elements');
 
     cardList.renderItems();
     myProfile.showUserInfo();
-    // refreshProfile(myProfileInfo.name, myProfileInfo.about, myProfileInfo.avatar);
-     //  myID = myProfileInfo._id;
   })
   .catch((err) => {
     console.log(err);
   });
-
-  // export let myID;
 
 //открыть окно редактирования профиля
 const openPopupProfile = new Popup (profileEditPopup);

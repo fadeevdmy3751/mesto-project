@@ -17,8 +17,12 @@ export default class Section {
   /**
    * Метод, который принимает DOM-элемент и добавляет его в контейнер
    * @param element - DOM-элемент
+   * @param beginning - флаг, в начало или конец секции добавлять новую карточку
    */
-  addItem(element) {
+  addItem(element, beginning=false) {
+    if(beginning)
+      this._container.prepend(element);
+    else
       this._container.append(element);
   }
 

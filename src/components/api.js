@@ -166,9 +166,8 @@ export class CardsApi extends Api {
    * @param event - event произошедшего события в EventListener.
    * @returns возвращается или json, или Promise.reject
    */
-  likeCard(event) {
-    console.log(event)
-    const card = event.target.closest('.card');
+  likeCard(card) {
+    //const card = event.target.closest('.card');
 
     // инициализация параметров
     let requestMethod = '';
@@ -183,7 +182,7 @@ export class CardsApi extends Api {
       errorMes = 'Ошибка put like: ';
     }
 
-    return this._makeFetch(this._cardsLikeUrl + card._id, requestMethod,
+    return this._makeFetch(this._cardsLikeUrl + card.id, requestMethod,
         errorMes);
   }
 }
