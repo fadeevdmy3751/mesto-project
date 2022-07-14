@@ -101,7 +101,8 @@ Promise.all([cardsApi.getInitialCards(), profileApi.getMe()])
             const cardPopup = new PopupWithImage(bigImgPopup, json.link, json.name);
             const card = new Card (json, '#card-template', json.owner._id,
               () => cardPopup.open(),
-              (card) => cardsApi.likeCard(card));
+              (card) => cardsApi.likeCard(card),
+              (card) => cardsApi.deleteCard(card));
             const cardElement = card.generate();
             cardList.addItem(cardElement, true);
           })
