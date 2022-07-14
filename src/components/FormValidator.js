@@ -34,13 +34,12 @@ export class FormValidator {
 
   /**
    * Метод очищения полей формы
-   * @param popup - попап формы
    */
-  clearPopupInputs(popup) {
-    const inputList = Array.from(popup.querySelectorAll(this._inputSelector));
+  clearPopupInputs() {
+    const inputList = Array.from(this._formElement.querySelectorAll(this._inputSelector));
     const buttonElement = this._formElement.querySelector(this._submitButtonSelector);
     inputList.forEach((inputElement) => {
-      this._hideInputError(this._formElement, inputElement, this._inputErrorClass, this._errorClass);
+      this._hideInputError(inputElement, this._inputErrorClass, this._errorClass);
       inputElement.value = ''
     });
     this._toggleButtonState(inputList, buttonElement, this._inactiveButtonClass);
@@ -55,9 +54,9 @@ export class FormValidator {
     this._toggleButtonState(inputList, buttonElement, this._inactiveButtonClass);
 
     inputList.forEach((inputElement) => {
-      inputElement.addEventListener('input', function () {
-        this.this._isValid(inputElement, this._inputErrorClass, this._errorClass);
-        this.this._toggleButtonState (inputList, buttonElement, this._inactiveButtonClass);
+      inputElement.addEventListener('input', () => {
+        this._isValid(inputElement, this._inputErrorClass, this._errorClass);
+        this._toggleButtonState (inputList, buttonElement, this._inactiveButtonClass);
       });
     });
   }
@@ -126,9 +125,10 @@ export class FormValidator {
    */
   _hideInputError(inputElement, inputErrorClass, errorClass) {
     const errorElement = this._formElement.querySelector(`.${inputElement.id}-error`);
-
-    inputElement.classList.remove(inputErrorClass);
-    errorElement.classList.remove(errorClass);
+    if(inputElement.classList.contains(inputErrorClass))
+      inputElement.classList.remove(inputErrorClass);
+    if(errorElement.classList.contains(errorClass))
+      errorElement.classList.remove(errorClass);
     errorElement.textContent = '';
   }
 }

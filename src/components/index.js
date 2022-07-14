@@ -33,7 +33,7 @@ import Popup from './popup.js';
 import { COHORT, TOKEN } from "./secret.js";
 import Card from './card.js';
 import Section from './Section.js'
-import {validationParams, clearPopupInputs, enableValidation} from "./validate.js";
+// import {validationParams, clearPopupInputs, enableValidation} from "./validate.js";
 import {FormValidator} from "./FormValidator.js";
 import { CardsApi, ProfileApi, AvatarApi } from './api.js';
 import { refreshProfile } from './utils.js';
@@ -48,14 +48,14 @@ const apiConfig = {
   }
 }
 
-// const validationParams = {
-//   formSelector: '.form',
-//   inputSelector: '.form__field',
-//   submitButtonSelector: '.form__button',
-//   inactiveButtonClass: 'form__button_disabled',
-//   inputErrorClass: 'form__field_error',
-//   errorClass: 'form__error_visible',
-// }
+const validationParams = {
+  formSelector: '.form',
+  inputSelector: '.form__field',
+  submitButtonSelector: '.form__button',
+  inactiveButtonClass: 'form__button_disabled',
+  inputErrorClass: 'form__field_error',
+  errorClass: 'form__error_visible',
+}
 
 const cardsApi = new CardsApi(apiConfig);
 const profileApi = new ProfileApi(apiConfig);
@@ -87,62 +87,42 @@ Promise.all([cardsApi.getInitialCards(), profileApi.getMe()])
     console.log(err);
   });
 
-//открыть окно редактирования профиля
-const openPopupProfile = new Popup (profileEditPopup);
+//создание валидатора профиля
+const profileValidator = new FormValidator({
+  inputSelector: validationParams.inputSelector,
+  submitButtonSelector: validationParams.submitButtonSelector,
+  inactiveButtonClass: validationParams.inactiveButtonClass,
+  inputErrorClass: validationParams.inputErrorClass,
+  errorClass: validationParams.errorClass}, profileEditForm)
 
+//создание попапа редактирования профиля
+const openPopupProfile = new PopupWithForm(profileEditPopup,
+  (data) => {
+    console.log(data);
+    profileEditForm.querySelector('.form__button').textContent = "Сохранение...";
+    profileApi.editProfile(data.name, data.profession)
+      .then((json) => {
+        console.log('userinfo updated', json);
+        myProfile.refreshUserInfo({name: json.name, about: json.about});
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+      .finally(() => {
+        profileEditForm.querySelector('.form__button').textContent = "Сохранить";
+        openPopupProfile.close();
+      });
+  });
+
+//навешивание листенера на кнопку открытия попапа профиля
 profileEditBtn.addEventListener('click', () => {
-  clearPopupInputs(profileEditPopup, validationParams);
+  profileValidator.clearPopupInputs();
   nameInput.value = document.querySelector(profileName).textContent;
   descriptionInput.value = document.querySelector(profileDescription).textContent;
   openPopupProfile.open();
+  profileValidator.enableValidation();
 })
 
-
-// Редактирование профиля:
-const formEditUser = new PopupWithForm (profileEditPopup, {
-  handleSubmit: (data) => {
-    console.log(data)
-    profileEditForm.querySelector('.form__button').textContent = "Сохранение...";
-    const profileApi = new ProfileApi();
-    profileApi.editProfile(nameInput.value, descriptionInput.value)
-      .then((json) => {
-        console.log('userinfo updated', json);
-        refreshProfile(json.name, json.about)
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-    .finally(() => {
-      profileEditForm.textContent = "Сохранить";
-      console.log(data)
-      // formEditUser.close();
-      // openPopupProfile.close();
-      // new Popup ('.popup-profile-edit').close();
-    });
-  }
-});
-
-  // profileEditForm.addEventListener('submit', () => {
-
-  // });
-
-// profileEditForm.addEventListener('submit', evt => {
-//   evt.preventDefault();
-//   profileEditForm.querySelector('.form__button').textContent = 'Сохранение...'
-//   const profileApi = new ProfileApi()
-//   profileApi.editProfile(nameInput.value, descriptionInput.value)
-//     .then((json) => {
-//       console.log('userinfo updated', json)
-//       refreshProfile(json.name, json.about)
-//       new Popup ('.popup-profile-edit').close();
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     })
-//     .finally(() => {
-//       profileEditForm.querySelector('.form__button').textContent = 'Сохранить'
-//     })
-// })
 
  //открыть окно редактирования аватарки
 const openPopupAvatar = new Popup (avatarEditPopup);
