@@ -26,7 +26,7 @@ const profileName = '.profile__name';
 const profileDescription = '.profile__description';
 const profileAvatar = '.profile__avatar';
 
-// import  '../pages/index.css';
+import  '../pages/index.css';
 
 import { COHORT, TOKEN } from "./secret.js";
 import Card from './card.js';
