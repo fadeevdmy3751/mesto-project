@@ -1,6 +1,7 @@
 /**
  * Класс валидации полей указанной формы.
  */
+
 export class FormValidator {
   /**
    * Конструктор - на входе объект настроек с селекторами и классами формы, а также вторым параметром элемент
@@ -26,10 +27,12 @@ export class FormValidator {
    * Метод активации валидации формы
    */
   enableValidation() {
-    this._formElement.addEventListener('submit', (evt) => {
-      evt.preventDefault();
-    });
+    this._formElement.addEventListener('submit', this._functionEventListener);
     this._setEventListeners();
+  }
+
+  _functionEventListener(evt) {
+    evt.preventDefault();
   }
 
   /**

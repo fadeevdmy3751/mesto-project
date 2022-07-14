@@ -15,6 +15,7 @@ export default class PopupWithForm extends Popup {
     this._form = this.selector.querySelector('.form');
     this._inputs = this._form.querySelectorAll('.form__field');
     this._handleSubmit = handleSubmit;
+    this._functionEventListener = this._functionEventListener.bind(this);
   }
 
   /**
@@ -23,11 +24,9 @@ export default class PopupWithForm extends Popup {
    */
   setEventListeners() {
     super.setEventListeners();
-    this._form.addEventListener('submit', (evt) => {
-      evt.preventDefault();
-      this._handleSubmit(this._getInputValues());
-    })
-  }
+    this._form.addEventListener('submit', this._functionEventListener)
+    }
+
 
   /**
    * Расширение родительского метода: метод не только закрывает попап, но и сбрасывает форму
@@ -35,6 +34,13 @@ export default class PopupWithForm extends Popup {
   close() {
     super.close();
     this._form.reset();
+    this._form.removeEventListener('submit', this._functionEventListener)
+  }
+
+  _functionEventListener(evt) {
+    evt.preventDefault();
+    this._handleSubmit(this._getInputValues());
+    this.close();
   }
 
   /**

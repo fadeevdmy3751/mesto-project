@@ -1,4 +1,4 @@
-import PopupWithImage from "./PopupWithImage";
+import PopupWithImage from "./PopupWithImage.js";
 
 const content = document.querySelector('.content');
 const avatarEditPopup = document.querySelector('.popup-avatar-edit');
@@ -26,7 +26,7 @@ const profileName = '.profile__name';
 const profileDescription = '.profile__description';
 const profileAvatar = '.profile__avatar';
 
-import  '../pages/index.css';
+// import  '../pages/index.css';
 
 import { COHORT, TOKEN } from "./secret.js";
 import Card from './card.js';
