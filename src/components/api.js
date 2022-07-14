@@ -146,7 +146,7 @@ export class CardsApi extends Api {
    * @returns возвращается или json, или Promise.reject
    */
   addCardOnServer(name, link) {
-    return this._makeFetch(this._cardsLikeUrl, 'POST',
+    return this._makeFetch(this._cardsBaseUrl, 'POST',
         'Ошибка addCardOnServer: ', {name: name, link: link});
   }
 

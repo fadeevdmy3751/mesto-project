@@ -67,7 +67,7 @@ const myProfile = new UserInfo(
     userAvatarSelector: profileAvatar
   })
 
-Promise.all([cardsApi.getInitialCards(), profileApi.getMe()])
+const initialPromises = () => Promise.all([cardsApi.getInitialCards(), profileApi.getMe()])
   .then(([cardsInfo, myProfileInfo]) => {
     const cardList = new Section({
       items: cardsInfo,
@@ -83,10 +83,15 @@ Promise.all([cardsApi.getInitialCards(), profileApi.getMe()])
 
     cardList.renderItems();
     myProfile.refreshUserInfo({name: myProfileInfo.name, about: myProfileInfo.about, avatar: myProfileInfo.avatar});
+    return [cardList, myProfileInfo._id];
   })
   .catch((err) => {
     console.log(err);
   });
+
+const initialPromisesResults = initialPromises()
+const cardList = initialPromisesResults[0];
+const myID = initialPromisesResults[1];
 
 //создание валидатора профиля
 const profileValidator = new FormValidator({
@@ -167,12 +172,16 @@ const newCardValidator = new FormValidator({
 //создание попапа редактирования аватарки
 const openPopupNewCard = new PopupWithForm(cardAddPopup,
   (data) => {
-  console.log(data)
     cardAddForm.querySelector('.form__button').textContent = "Сохранение...";
-    cardsApi.addCardOnServer(data.name, data.link)
+    cardsApi.addCardOnServer(data["card-name"], data["card-link"])
       .then((json) => {
         console.log('new card added', json);
-        myProfile.refreshUserInfo({avatar: json.avatar});
+        const cardPopup = new PopupWithImage(bigImgPopup, json.link, json.name);
+        const card = new Card (json, '#card-template', json.owner._id,
+          () => cardPopup.open(),
+          (card) => cardsApi.likeCard(card));
+        const cardElement = card.generate();
+        cardList.addItem(cardElement, true);
       })
       .catch((err) => {
         console.log(err)
