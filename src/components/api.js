@@ -152,12 +152,13 @@ export class CardsApi extends Api {
 
   /**
    * Метод удаления выбранной (определяется по event) карточки
-   * @param event - event произошедшего события в EventListener.
+   * @param card - карточка (html)
    * @returns возвращается или json, или Promise.reject
    */
-  deleteCard(event) {
-    const card = event.target.closest('.card');
-    return this._makeFetch(this._cardsBaseUrl +'/' + card._id, 'DELETE',
+  deleteCard(card) {
+    console.log(card)
+    // const card = event.target.closest('.card');
+    return this._makeFetch(this._cardsBaseUrl +'/' + card.id, 'DELETE',
         'Ошибка deleteCard: ');
   }
 

@@ -67,7 +67,8 @@ const myProfile = new UserInfo(
     userAvatarSelector: profileAvatar
   })
 
-const initialPromises = () => Promise.all([cardsApi.getInitialCards(), profileApi.getMe()])
+//const initialPromises = () => Promise.all([cardsApi.getInitialCards(), profileApi.getMe()])
+Promise.all([cardsApi.getInitialCards(), profileApi.getMe()])
   .then(([cardsInfo, myProfileInfo]) => {
     const cardList = new Section({
       items: cardsInfo,
@@ -75,7 +76,8 @@ const initialPromises = () => Promise.all([cardsApi.getInitialCards(), profileAp
         const cardPopup = new PopupWithImage(bigImgPopup, item.link, item.name);
         const card = new Card (item, '#card-template', myProfileInfo._id,
           () => cardPopup.open(),
-          (card) => cardsApi.likeCard(card));
+          (card) => cardsApi.likeCard(card),
+          (card) => cardsApi.deleteCard(card));
         const cardElement = card.generate();
         cardList.addItem(cardElement);
       }
@@ -83,15 +85,52 @@ const initialPromises = () => Promise.all([cardsApi.getInitialCards(), profileAp
 
     cardList.renderItems();
     myProfile.refreshUserInfo({name: myProfileInfo.name, about: myProfileInfo.about, avatar: myProfileInfo.avatar});
-    return [cardList, myProfileInfo._id];
+
+    //создание валидатора добавления карточки
+    const newCardValidator = new FormValidator({
+      inputSelector: validationParams.inputSelector,
+      submitButtonSelector: validationParams.submitButtonSelector,
+      inactiveButtonClass: validationParams.inactiveButtonClass,
+      inputErrorClass: validationParams.inputErrorClass,
+      errorClass: validationParams.errorClass}, cardAddForm)
+
+    //создание попапа добавления карточки
+    const openPopupNewCard = new PopupWithForm(cardAddPopup,
+      (data) => {
+        cardAddForm.querySelector('.form__button').textContent = "Сохранение...";
+        cardsApi.addCardOnServer(data["card-name"], data["card-link"])
+          .then((json) => {
+            console.log('new card added', json);
+            const cardPopup = new PopupWithImage(bigImgPopup, json.link, json.name);
+            const card = new Card (json, '#card-template', json.owner._id,
+              () => cardPopup.open(),
+              (card) => cardsApi.likeCard(card));
+            const cardElement = card.generate();
+            cardList.addItem(cardElement, true);
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+          .finally(() => {
+            cardAddForm.querySelector('.form__button').textContent = "Сохранить";
+            openPopupNewCard.close();
+          });
+      });
+
+    //навешивание листенера на кнопку открытия попапа добавления карточки
+    cardAddBtn.addEventListener('click', () => {
+      newCardValidator.clearPopupInputs();
+      openPopupNewCard.open();
+      newCardValidator.enableValidation();
+    })
   })
   .catch((err) => {
     console.log(err);
   });
 
-const initialPromisesResults = initialPromises()
-const cardList = initialPromisesResults[0];
-const myID = initialPromisesResults[1];
+// const initialPromisesResults = initialPromises()
+// const cardList = initialPromisesResults[0];
+// const myID = initialPromisesResults[1];
 
 //создание валидатора профиля
 const profileValidator = new FormValidator({
@@ -161,41 +200,4 @@ document.querySelector(profileAvatar).addEventListener('click', () => {
   avatarValidator.enableValidation();
 })
 
-//создание валидатора аватарки
-const newCardValidator = new FormValidator({
-  inputSelector: validationParams.inputSelector,
-  submitButtonSelector: validationParams.submitButtonSelector,
-  inactiveButtonClass: validationParams.inactiveButtonClass,
-  inputErrorClass: validationParams.inputErrorClass,
-  errorClass: validationParams.errorClass}, cardAddForm)
-
-//создание попапа редактирования аватарки
-const openPopupNewCard = new PopupWithForm(cardAddPopup,
-  (data) => {
-    cardAddForm.querySelector('.form__button').textContent = "Сохранение...";
-    cardsApi.addCardOnServer(data["card-name"], data["card-link"])
-      .then((json) => {
-        console.log('new card added', json);
-        const cardPopup = new PopupWithImage(bigImgPopup, json.link, json.name);
-        const card = new Card (json, '#card-template', json.owner._id,
-          () => cardPopup.open(),
-          (card) => cardsApi.likeCard(card));
-        const cardElement = card.generate();
-        cardList.addItem(cardElement, true);
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-      .finally(() => {
-        cardAddForm.querySelector('.form__button').textContent = "Сохранить";
-        openPopupNewCard.close();
-      });
-  });
-
-//навешивание листенера на кнопку открытия попапа аватарки
-cardAddBtn.addEventListener('click', () => {
-  newCardValidator.clearPopupInputs();
-  openPopupNewCard.open();
-  newCardValidator.enableValidation();
-})
 

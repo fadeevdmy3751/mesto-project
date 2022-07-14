@@ -4,7 +4,7 @@ export const bigImgCaption = bigImgPopup.querySelector('.big-img__caption');
 const cardTemplate = document.querySelector('#card-template').content;
 
 export default class Card {
-  constructor(data, selector, myId, handleCardClick, handleCardLike) {
+  constructor(data, selector, myId, handleCardClick, handleCardLike, handleCardDelete) {
     this._selector = selector;
     this._name = data.name;
     this._link = data.link;
@@ -14,6 +14,7 @@ export default class Card {
     this._myID = myId;
     this._handleCardClick = handleCardClick;
     this._handleCardLike = handleCardLike
+    this._handleCardDelete = handleCardDelete;
   }
 
   generate() {
@@ -82,7 +83,14 @@ export default class Card {
     })
     //удаление
     this._element.querySelector('.card__delete').addEventListener('click', () => {
-      this._addDeleteButton();
+      this._handleCardDelete(this._element)
+        .then((data) => {
+          console.log(data)
+          this._element.remove()
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     })
     //попап картинки
     this._element.querySelector('.card__image').addEventListener('click', () => {
