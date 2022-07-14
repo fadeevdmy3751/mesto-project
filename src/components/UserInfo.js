@@ -59,18 +59,5 @@ export default class UserInfo {
       .catch((err) => {
         console.log(err);
       });
-    // this._nameUser.textContent = data.name;
-    // this._jobUser.textContent = data.about;
-    // this._urlAvatarUser.src = data.avatar;
   }
 }
-
-// getUserInfo() {
-//   const userInfo = {
-//     name: this._nameUser.textContent,
-//     about: this._jobUser.textContent,
-//     avatar: this._urlAvatarUser.src
-//   }
-//
-//   return userInfo;
-// }
