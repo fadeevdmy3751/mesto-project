@@ -156,71 +156,37 @@ document.querySelector(profileAvatar).addEventListener('click', () => {
   avatarValidator.enableValidation();
 })
 
-// Открыть окно добавления карточки
-// const openPopupCard = new Popup (cardAddPopup);
-//
-// cardAddBtn.addEventListener('click', () => {
-//   clearPopupInputs(cardAddPopup, validationParams);
-//   openPopupCard.open();
-// })
-const newCardPopup = new PopupWithForm()
+//создание валидатора аватарки
+const newCardValidator = new FormValidator({
+  inputSelector: validationParams.inputSelector,
+  submitButtonSelector: validationParams.submitButtonSelector,
+  inactiveButtonClass: validationParams.inactiveButtonClass,
+  inputErrorClass: validationParams.inputErrorClass,
+  errorClass: validationParams.errorClass}, cardAddForm)
 
+//создание попапа редактирования аватарки
+const openPopupNewCard = new PopupWithForm(cardAddPopup,
+  (data) => {
+  console.log(data)
+    cardAddForm.querySelector('.form__button').textContent = "Сохранение...";
+    cardsApi.addCardOnServer(data.name, data.link)
+      .then((json) => {
+        console.log('new card added', json);
+        myProfile.refreshUserInfo({avatar: json.avatar});
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+      .finally(() => {
+        cardAddForm.querySelector('.form__button').textContent = "Сохранить";
+        openPopupNewCard.close();
+      });
+  });
 
+//навешивание листенера на кнопку открытия попапа аватарки
+cardAddBtn.addEventListener('click', () => {
+  newCardValidator.clearPopupInputs();
+  openPopupNewCard.open();
+  newCardValidator.enableValidation();
+})
 
-//закрыть окна
-// console.log(closePopup)
-// console.log(closePopup.close())
-
-// popupCloseButtons.forEach(btn => {
-//   btn.addEventListener('click', closePopup.close())
-// })
-
-// popups.forEach(popup => {
-//   popup.addEventListener('click', closePopup.close())
-// })
-
-
-// avatarEditForm.addEventListener('submit', function (evt) {
-//   evt.preventDefault();
-//   avatarEditForm.querySelector('.form__button').textContent = 'Сохранение...'
-//   const avatarApi = new AvatarApi()
-//   avatarApi.editAvatar(avatarInput.value)
-//     .then((json) => {
-//       console.log('user avatar updated', json)
-//       refreshProfile(null, null, json.avatar)
-//       new Popup ('.popup-avatar-edit').close();
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     })
-//     .finally(() => {
-//       avatarEditForm.querySelector('.form__button').textContent = 'Сохранить'
-
-//     })
-// })
-
-
-
-
-
-// cardAddForm.addEventListener('submit', evt => {
-//   evt.preventDefault();
-//   cardAddForm.querySelector('.form__button').textContent = 'Сохранение...'
-//   addCardOnServer(cardNameInput.value, cardLinkInput.value)
-//     .then((json) => {
-//       Card.addCard(Card.generate (json), elementsContainer, true);
-//       new Popup ('.popup-card-add').close();
-//       cardNameInput.value = '';
-//       cardLinkInput.value = '';
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     })
-//     .finally(() => {
-//       cardAddForm.querySelector('.form__button').textContent = 'Сохранить'
-//     })
-// })
-
-
-
-enableValidation(validationParams);
