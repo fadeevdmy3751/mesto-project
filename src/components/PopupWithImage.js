@@ -27,18 +27,5 @@ export default class PopupWithImage extends Popup {
     document.querySelector('.big-img__image').src = this.cardImg;
     document.querySelector('.big-img__caption').textContent = this.cardText;
     document.querySelector('.big-img__image').alt = this.cardText;
-
-    // bigImage.src = this.cardImg.src;
-    // this.cardImg.src = bigImage.src;
-    // bigImage.alt = json.name;
-    // bigImgCaption.textContent = json.name;
-
-    // const elementImag = this.elementImag;
-    // const cardElement = elementImag.closest('.card');
-    // const elementCaption = cardElement.querySelector('.card__name').textContent;
-    // console.log(cardElement);
-
-    // this.bigImage.src = elementImag.src;
-    // this.bigImgCaption.textContent = bigImage.alt = elementCaption;
   }
 }
