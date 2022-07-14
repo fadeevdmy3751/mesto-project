@@ -59,6 +59,7 @@ const validationParams = {
 
 const cardsApi = new CardsApi(apiConfig);
 const profileApi = new ProfileApi(apiConfig);
+const avatarApi = new AvatarApi(apiConfig);
 const myProfile = new UserInfo(
   {
     userNameSelector: profileName,
@@ -98,7 +99,6 @@ const profileValidator = new FormValidator({
 //создание попапа редактирования профиля
 const openPopupProfile = new PopupWithForm(profileEditPopup,
   (data) => {
-    console.log(data);
     profileEditForm.querySelector('.form__button').textContent = "Сохранение...";
     profileApi.editProfile(data.name, data.profession)
       .then((json) => {
@@ -123,32 +123,38 @@ profileEditBtn.addEventListener('click', () => {
   profileValidator.enableValidation();
 })
 
+//создание валидатора аватарки
+const avatarValidator = new FormValidator({
+  inputSelector: validationParams.inputSelector,
+  submitButtonSelector: validationParams.submitButtonSelector,
+  inactiveButtonClass: validationParams.inactiveButtonClass,
+  inputErrorClass: validationParams.inputErrorClass,
+  errorClass: validationParams.errorClass}, avatarEditForm)
 
- //открыть окно редактирования аватарки
-const openPopupAvatar = new Popup (avatarEditPopup);
+//создание попапа редактирования аватарки
+const openPopupAvatar = new PopupWithForm(avatarEditPopup,
+  (data) => {
+    avatarEditForm.querySelector('.form__button').textContent = "Сохранение...";
+    avatarApi.editAvatar(data.avatar)
+      .then((json) => {
+        console.log('avatar updated', json);
+        myProfile.refreshUserInfo({avatar: json.avatar});
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+      .finally(() => {
+        avatarEditForm.querySelector('.form__button').textContent = "Сохранить";
+        openPopupAvatar.close();
+      });
+  });
 
-profileAvatar.addEventListener('click', () => {
-  clearPopupInputs(avatarEditPopup, validationParams);
+//навешивание листенера на кнопку открытия попапа аватарки
+document.querySelector(profileAvatar).addEventListener('click', () => {
+  avatarValidator.clearPopupInputs();
   openPopupAvatar.open();
-});
-
-
-// Редактирование аватарки:
-// const formEditAvatar = new PopupWithForm(profileEditPopup, {
-//   handleSubmit: (data) => {
-//     avatarEditForm.querySelector('.form__button').textContent = "Сохранение...";
-//     profileApi.getMe(data)
-//     .then((data) => {
-//     userInfo.setUserInfo(data);
-//     })
-//     .catch((err) => {
-//     console.log(err)})
-//     .finally(() => {
-//       profileEditForm.textContent = "Сохранить";
-//     formEditUser.close();
-//     });
-//   }
-// });
+  avatarValidator.enableValidation();
+})
 
 // Открыть окно добавления карточки
 // const openPopupCard = new Popup (cardAddPopup);
