@@ -17,7 +17,6 @@ export default class Card {
     this._setEventListeners();
     this._addDefaultLike()
     this._addDeleteButton()
-    // this._refreshLikes(this._element, json)
     this._element.querySelector('.card__image').src = this._link;
     this._element.querySelector('.card__name').textContent = this._name;
     this._element.querySelector('.card__image').alt = this._name;
