@@ -9,34 +9,31 @@ const profileEditForm = profileEditPopup.querySelector('.form[name="popup-profil
 
 const nameInput = profileEditPopup.querySelector('#form__field-name');
 const descriptionInput = profileEditPopup.querySelector('#form__field-profession');
-const avatarInput = avatarEditForm.querySelector('#form__field-ava');
+// const avatarInput = avatarEditForm.querySelector('#form__field-ava');
 const cardAddPopup = document.querySelector('.popup-card-add'); // уточнить класс
 const cardAddBtn = content.querySelector('.profile__add-button');
 const bigImgPopup = document.querySelector('.big-img');
 const cardAddForm = cardAddPopup.querySelector('.form[name="popup-card-add-form"]'); // уточнить класс или name
-const cardNameInput = cardAddPopup.querySelector('#card-add-name');
-const cardLinkInput = cardAddPopup.querySelector('#card-add-link');
-const elementsContainer = content.querySelector('.elements');
-const popups = document.querySelectorAll('.popup');
-const popupCloseButtons = document.querySelectorAll('.popup__close')
-const cardTemplate = document.querySelector('#card-template').content;
-const card1 = content.querySelector('.card');
+// const cardNameInput = cardAddPopup.querySelector('#card-add-name');
+// const cardLinkInput = cardAddPopup.querySelector('#card-add-link');
+// const elementsContainer = content.querySelector('.elements');
+// const popups = document.querySelectorAll('.popup');
+// const popupCloseButtons = document.querySelectorAll('.popup__close')
+// const cardTemplate = document.querySelector('#card-template').content;
+// const card1 = content.querySelector('.card');
 
 const profileName = '.profile__name';
 const profileDescription = '.profile__description';
 const profileAvatar = '.profile__avatar';
 
 import  '../pages/index.css';
-import Popup from './popup.js';
-//import { openPopup, closePopup } from './popup.js';
-//import {addCard, createCard} from './card.js';
+
 import { COHORT, TOKEN } from "./secret.js";
 import Card from './card.js';
 import Section from './Section.js'
-// import {validationParams, clearPopupInputs, enableValidation} from "./validate.js";
 import {FormValidator} from "./FormValidator.js";
 import { CardsApi, ProfileApi, AvatarApi } from './api.js';
-import { refreshProfile } from './utils.js';
+// import { refreshProfile } from './utils.js';
 import PopupWithForm from './PopupWithForm.js' ;
 import UserInfo from './UserInfo.js'
 
@@ -128,10 +125,6 @@ Promise.all([cardsApi.getInitialCards(), profileApi.getMe()])
     console.log(err);
   });
 
-// const initialPromisesResults = initialPromises()
-// const cardList = initialPromisesResults[0];
-// const myID = initialPromisesResults[1];
-
 //создание валидатора профиля
 const profileValidator = new FormValidator({
   inputSelector: validationParams.inputSelector,
@@ -144,18 +137,22 @@ const profileValidator = new FormValidator({
 const openPopupProfile = new PopupWithForm(profileEditPopup,
   (data) => {
     profileEditForm.querySelector('.form__button').textContent = "Сохранение...";
-    profileApi.editProfile(data.name, data.profession)
-      .then((json) => {
-        console.log('userinfo updated', json);
-        myProfile.refreshUserInfo({name: json.name, about: json.about});
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-      .finally(() => {
-        profileEditForm.querySelector('.form__button').textContent = "Сохранить";
-        openPopupProfile.close();
-      });
+    myProfile.setUserInfo({name: data.name, about: data.profession},
+      (name, about) => profileApi.editProfile(name, about))
+    profileEditForm.querySelector('.form__button').textContent = "Сохранить";
+    openPopupProfile.close();
+    //profileApi.editProfile(data.name, data.profession)
+    //   .then((json) => {
+    //     console.log('userinfo updated', json);
+    //     myProfile.refreshUserInfo({name: json.name, about: json.about});
+    //   })
+    //   .catch((err) => {
+    //     console.log(err)
+    //   })
+    //   .finally(() => {
+    //     profileEditForm.querySelector('.form__button').textContent = "Сохранить";
+    //     openPopupProfile.close();
+    //   });
   });
 
 //навешивание листенера на кнопку открытия попапа профиля
