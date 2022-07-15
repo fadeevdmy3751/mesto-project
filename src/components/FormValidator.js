@@ -21,6 +21,8 @@ export class FormValidator {
     this._inputErrorClass = inputErrorClass;
     this._errorClass = errorClass;
     this._formElement = formElement;
+    this._inputList = Array.from(this._formElement.querySelectorAll(this._inputSelector));
+    this._buttonElement = this._formElement.querySelector(this._submitButtonSelector);
   }
 
   /**
@@ -39,27 +41,23 @@ export class FormValidator {
    * Метод очищения полей формы
    */
   clearPopupInputs() {
-    const inputList = Array.from(this._formElement.querySelectorAll(this._inputSelector));
-    const buttonElement = this._formElement.querySelector(this._submitButtonSelector);
-    inputList.forEach((inputElement) => {
+    this._inputList.forEach((inputElement) => {
       this._hideInputError(inputElement, this._inputErrorClass, this._errorClass);
       inputElement.value = ''
     });
-    this._toggleButtonState(inputList, buttonElement, this._inactiveButtonClass);
+    this._toggleButtonState(this._inputList, this._buttonElement, this._inactiveButtonClass);
   }
 
   /**
    * Метод добавления EventListener к элементам формы
    */
   _setEventListeners() {
-    const inputList = Array.from(this._formElement.querySelectorAll(this._inputSelector));
-    const buttonElement = this._formElement.querySelector(this._submitButtonSelector);
-    this._toggleButtonState(inputList, buttonElement, this._inactiveButtonClass);
+    this._toggleButtonState(this._inputList, this._buttonElement, this._inactiveButtonClass);
 
-    inputList.forEach((inputElement) => {
+    this._inputList.forEach((inputElement) => {
       inputElement.addEventListener('input', () => {
         this._isValid(inputElement, this._inputErrorClass, this._errorClass);
-        this._toggleButtonState (inputList, buttonElement, this._inactiveButtonClass);
+        this._toggleButtonState (this._inputList, this._buttonElement, this._inactiveButtonClass);
       });
     });
   }
