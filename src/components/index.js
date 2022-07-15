@@ -57,18 +57,23 @@ const myProfile = new UserInfo(
     userAvatarSelector: profileAvatar
   })
 
-//const initialPromises = () => Promise.all([cardsApi.getInitialCards(), profileApi.getMe()])
+function createCard(item, myProfileInfo) {
+  const card = new Card(item, '#card-template', myProfileInfo,
+  () => cardPopup.open(item.link, item.name),
+  (card) => cardsApi.likeCard(card),
+  (card) => cardsApi.deleteCard(card));
+
+  const cardElement = card.generate();
+  return cardElement;
+}
+
 Promise.all([cardsApi.getInitialCards(), profileApi.getMe()])
   .then(([cardsInfo, myProfileInfo]) => {
     const cardList = new Section({
       items: cardsInfo,
       renderer: (item) => {
-        const card = new Card (item, '#card-template', myProfileInfo._id,
-          () => cardPopup.open(item.link, item.name),
-          (card) => cardsApi.likeCard(card),
-          (card) => cardsApi.deleteCard(card));
-        const cardElement = card.generate();
-        cardList.addItem(cardElement);
+        const card = createCard(item, myProfileInfo._id);
+        cardList.addItem(card);
       }
     }, '.elements');
 
@@ -90,12 +95,8 @@ Promise.all([cardsApi.getInitialCards(), profileApi.getMe()])
         cardsApi.addCardOnServer(data["card-name"], data["card-link"])
           .then((json) => {
             console.log('new card added', json);
-            const card = new Card (json, '#card-template', json.owner._id,
-              () => cardPopup.open(json.link, json.name),
-              (card) => cardsApi.likeCard(card),
-              (card) => cardsApi.deleteCard(card));
-            const cardElement = card.generate();
-            cardList.addItem(cardElement, true);
+            const card = createCard(json, json.owner._id);
+            cardList.addItem(card, true);
             openPopupNewCard.close();
           })
           .catch((err) => {

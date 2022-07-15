@@ -9,7 +9,7 @@ export default class Card {
     this._cardOwnerId = data.owner._id; //owner._id - автор карточки
     this._myID = myId;
     this._handleCardClick = handleCardClick;
-    this._handleCardLike = handleCardLike
+    this._handleCardLike = handleCardLike;
     this._handleCardDelete = handleCardDelete;
   }
 
@@ -22,8 +22,8 @@ export default class Card {
     this._cardImage.alt = this._name;
     this._cardLikeCount.textContent = this._likes.length;
     this._setEventListeners();
-    this._addDefaultLike()
-    this._addDeleteButton()
+    this._addDefaultLike();
+    this._addDeleteButton();
     this._element.id = this._id;
     return this._element;
   }
