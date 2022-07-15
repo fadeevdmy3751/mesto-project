@@ -1,3 +1,4 @@
+
 export default class Card {
   constructor(data, selector, myId, handleCardClick, handleCardLike, handleCardDelete) {
     this._selector = selector;
