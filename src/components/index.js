@@ -49,6 +49,7 @@ const validationParams = {
 const cardsApi = new CardsApi(apiConfig);
 const profileApi = new ProfileApi(apiConfig);
 const avatarApi = new AvatarApi(apiConfig);
+const cardPopup = new PopupWithImage(bigImgPopup);
 const myProfile = new UserInfo(
   {
     userNameSelector: profileName,
@@ -62,9 +63,8 @@ Promise.all([cardsApi.getInitialCards(), profileApi.getMe()])
     const cardList = new Section({
       items: cardsInfo,
       renderer: (item) => {
-        const cardPopup = new PopupWithImage(bigImgPopup, item.link, item.name);
         const card = new Card (item, '#card-template', myProfileInfo._id,
-          () => cardPopup.open(),
+          () => cardPopup.open(item.link, item.name),
           (card) => cardsApi.likeCard(card),
           (card) => cardsApi.deleteCard(card));
         const cardElement = card.generate();
@@ -90,20 +90,19 @@ Promise.all([cardsApi.getInitialCards(), profileApi.getMe()])
         cardsApi.addCardOnServer(data["card-name"], data["card-link"])
           .then((json) => {
             console.log('new card added', json);
-            const cardPopup = new PopupWithImage(bigImgPopup, json.link, json.name);
             const card = new Card (json, '#card-template', json.owner._id,
-              () => cardPopup.open(),
+              () => cardPopup.open(json.link, json.name),
               (card) => cardsApi.likeCard(card),
               (card) => cardsApi.deleteCard(card));
             const cardElement = card.generate();
             cardList.addItem(cardElement, true);
+            openPopupNewCard.close();
           })
           .catch((err) => {
             console.log(err)
           })
           .finally(() => {
             cardAddForm.querySelector('.form__button').textContent = "Сохранить";
-            openPopupNewCard.close();
           });
       });
 
@@ -162,13 +161,13 @@ const openPopupAvatar = new PopupWithForm(avatarEditPopup,
       .then((json) => {
         console.log('avatar updated', json);
         myProfile.refreshUserInfo({avatar: json.avatar});
+        openPopupAvatar.close();
       })
       .catch((err) => {
         console.log(err)
       })
       .finally(() => {
         avatarEditForm.querySelector('.form__button').textContent = "Сохранить";
-        openPopupAvatar.close();
       });
   });
 

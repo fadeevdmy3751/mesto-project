@@ -12,16 +12,19 @@ export default class UserInfo {
     this._userNameSelector = userNameSelector;
     this._userAboutSelector = userAboutSelector;
     this._userAvatarSelector = userAvatarSelector;
+    this._nameSelector = document.querySelector(this._userNameSelector);
+    this._aboutSelector = document.querySelector(this._userAboutSelector);
+    this._avatarSelector = document.querySelector(this._userAvatarSelector);
   }
 
   /**
    * Метод, возвращающий объект с данными пользователя
    */
   getUserInfo() {
-    const imgUrl = document.querySelector(this._userAvatarSelector).style.backgroundImage.slice(4, -1).replace(/"/g, "");
+    const imgUrl = this._avatarSelector.style.backgroundImage.slice(4, -1).replace(/"/g, "");
     return {
-      userName: document.querySelector(this._userNameSelector).textContent,
-      userAbout: document.querySelector(this._userAboutSelector).textContent,
+      userName: this._nameSelector.textContent,
+      userAbout: this._aboutSelector.textContent,
       userAvatar: imgUrl
     };
   }
@@ -34,13 +37,13 @@ export default class UserInfo {
    */
   refreshUserInfo({name=null, about = null, avatar = null}) {
     if(name) {
-      document.querySelector(this._userNameSelector).textContent = name;
+      this._nameSelector.textContent = name;
     }
     if(about) {
-      document.querySelector(this._userAboutSelector).textContent = about;
+      this._aboutSelector.textContent = about;
     }
     if(avatar) {
-      document.querySelector(this._userAvatarSelector).style.backgroundImage = `url('${avatar}')`;
+      this._avatarSelector.style.backgroundImage = `url('${avatar}')`;
     }
   }
 
