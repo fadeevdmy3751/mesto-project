@@ -2,9 +2,11 @@
 const content = document.querySelector('.content');
 const avatarEditPopup = document.querySelector('.popup-avatar-edit');
 const avatarEditForm = avatarEditPopup.querySelector('.form[name="popup-avatar-edit-form"]');// уточнить класс или name
+const avatarFormButton = avatarEditForm.querySelector('.form__button');
 const profileEditPopup = document.querySelector('.popup-profile-edit');// уточнить класс
 const profileEditBtn = content.querySelector('.profile__edit-button');
 const profileEditForm = profileEditPopup.querySelector('.form[name="popup-profile-edit-form"]');// уточнить класс или name
+const profileFormButton = profileEditForm.querySelector('.form__button');
 
 const nameInput = profileEditPopup.querySelector('#form__field-name');
 const descriptionInput = profileEditPopup.querySelector('#form__field-profession');
@@ -13,6 +15,7 @@ const cardAddPopup = document.querySelector('.popup-card-add'); // уточни�
 const cardAddBtn = content.querySelector('.profile__add-button');
 const bigImgPopup = document.querySelector('.big-img');
 const cardAddForm = cardAddPopup.querySelector('.form[name="popup-card-add-form"]'); // уточнить класс или name
+const cardFormButton = cardAddForm.querySelector('.form__button');
 
 const profileName = '.profile__name';
 const profileDescription = '.profile__description';
@@ -85,7 +88,7 @@ Promise.all([cardsApi.getInitialCards(), profileApi.getMe()])
     //создание попапа добавления карточки
     const openPopupNewCard = new PopupWithForm(cardAddPopup,
       (data) => {
-        cardAddForm.querySelector('.form__button').textContent = "Сохранение...";
+        cardFormButton.textContent = "Сохранение...";
         cardsApi.addCardOnServer(data["card-name"], data["card-link"])
           .then((json) => {
             console.log('new card added', json);
@@ -97,7 +100,7 @@ Promise.all([cardsApi.getInitialCards(), profileApi.getMe()])
             console.log(err)
           })
           .finally(() => {
-            cardAddForm.querySelector('.form__button').textContent = "Сохранить";
+            cardFormButton.textContent = "Сохранить";
           });
       });
 
@@ -117,7 +120,7 @@ const profileValidator = new FormValidator(validationParams, profileEditForm)
 //создание попапа редактирования профиля
 const openPopupProfile = new PopupWithForm(profileEditPopup,
   (data) => {
-    profileEditForm.querySelector('.form__button').textContent = "Сохранение...";
+    profileFormButton.textContent = "Сохранение...";
     profileApi.editProfile(data.name, data.profession)
       .then((json) => {
         console.log('profile info updated: ', json);
@@ -128,7 +131,7 @@ const openPopupProfile = new PopupWithForm(profileEditPopup,
         console.log(err)
       })
       .finally(() => {
-        profileEditForm.querySelector('.form__button').textContent = "Сохранить";
+        profileFormButton.textContent = "Сохранить";
       });
   });
 
@@ -146,7 +149,7 @@ const avatarValidator = new FormValidator(validationParams, avatarEditForm)
 //создание попапа редактирования аватарки
 const openPopupAvatar = new PopupWithForm(avatarEditPopup,
   (data) => {
-    avatarEditForm.querySelector('.form__button').textContent = "Сохранение...";
+    avatarFormButton.textContent = "Сохранение...";
     avatarApi.editAvatar(data.avatar)
       .then((json) => {
         console.log('avatar updated', json);
@@ -157,7 +160,7 @@ const openPopupAvatar = new PopupWithForm(avatarEditPopup,
         console.log(err)
       })
       .finally(() => {
-        avatarEditForm.querySelector('.form__button').textContent = "Сохранить";
+        avatarFormButton.textContent = "Сохранить";
       });
   });
 
