@@ -7,8 +7,6 @@ export default class PopupWithImage extends Popup {
   /**
    * Конструктор класса PopupWithImage
    * @param selector - селектор попапа
-   * @param cardImg - урл картинки
-   * @param cardText - текст описания карточки
    */
   constructor(selector) {
     super(selector);
