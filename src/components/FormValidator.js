@@ -13,13 +13,12 @@ export class FormValidator {
    * @param errorClass - класс сообщения об ошибке для поля ввода
    * @param formElement - валидируемая форма
    */
-  constructor({inputSelector, submitButtonSelector,
-              inactiveButtonClass, inputErrorClass, errorClass}, formElement) {
-    this._inputSelector = inputSelector;
-    this._submitButtonSelector = submitButtonSelector;
-    this._inactiveButtonClass = inactiveButtonClass;
-    this._inputErrorClass = inputErrorClass;
-    this._errorClass = errorClass;
+  constructor(data, formElement) {
+    this._inputSelector = data.inputSelector;
+    this._submitButtonSelector = data.submitButtonSelector;
+    this._inactiveButtonClass = data.inactiveButtonClass;
+    this._inputErrorClass = data.inputErrorClass;
+    this._errorClass = data.errorClass;
     this._formElement = formElement;
     this._inputList = Array.from(this._formElement.querySelectorAll(this._inputSelector));
     this._buttonElement = this._formElement.querySelector(this._submitButtonSelector);
@@ -29,12 +28,7 @@ export class FormValidator {
    * Метод активации валидации формы
    */
   enableValidation() {
-    this._formElement.addEventListener('submit', this._functionEventListener);
     this._setEventListeners();
-  }
-
-  _functionEventListener(evt) {
-    evt.preventDefault();
   }
 
   /**

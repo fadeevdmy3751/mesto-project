@@ -1,4 +1,3 @@
-import PopupWithImage from "./PopupWithImage.js";
 
 const content = document.querySelector('.content');
 const avatarEditPopup = document.querySelector('.popup-avatar-edit');
@@ -18,17 +17,6 @@ const cardAddForm = cardAddPopup.querySelector('.form[name="popup-card-add-form"
 const profileName = '.profile__name';
 const profileDescription = '.profile__description';
 const profileAvatar = '.profile__avatar';
-
-import  '../pages/index.css';
-
-import { COHORT, TOKEN } from "./secret.js";
-import Card from './card.js';
-import Section from './Section.js'
-import {FormValidator} from "./FormValidator.js";
-import { CardsApi, ProfileApi, AvatarApi } from './api.js';
-import PopupWithForm from './PopupWithForm.js' ;
-import UserInfo from './UserInfo.js'
-
 const apiConfig = {
   baseUrl: 'https://nomoreparties.co/v1/' + COHORT,
   headers: {
@@ -45,6 +33,18 @@ const validationParams = {
   inputErrorClass: 'form__field_error',
   errorClass: 'form__error_visible',
 }
+
+import  '../pages/index.css';
+
+import { COHORT, TOKEN } from "./secret.js";
+import PopupWithImage from "./PopupWithImage.js";
+import Card from './card.js';
+import Section from './Section.js'
+import {FormValidator} from "./FormValidator.js";
+import { CardsApi, ProfileApi, AvatarApi } from './api.js';
+import PopupWithForm from './PopupWithForm.js' ;
+import UserInfo from './UserInfo.js'
+
 
 const cardsApi = new CardsApi(apiConfig);
 const profileApi = new ProfileApi(apiConfig);
@@ -81,12 +81,7 @@ Promise.all([cardsApi.getInitialCards(), profileApi.getMe()])
     myProfile.refreshUserInfo({name: myProfileInfo.name, about: myProfileInfo.about, avatar: myProfileInfo.avatar});
 
     //создание валидатора добавления карточки
-    const newCardValidator = new FormValidator({
-      inputSelector: validationParams.inputSelector,
-      submitButtonSelector: validationParams.submitButtonSelector,
-      inactiveButtonClass: validationParams.inactiveButtonClass,
-      inputErrorClass: validationParams.inputErrorClass,
-      errorClass: validationParams.errorClass}, cardAddForm)
+    const newCardValidator = new FormValidator(validationParams, cardAddForm)
 
     //создание попапа добавления карточки
     const openPopupNewCard = new PopupWithForm(cardAddPopup,
@@ -111,8 +106,6 @@ Promise.all([cardsApi.getInitialCards(), profileApi.getMe()])
     cardAddBtn.addEventListener('click', () => {
       newCardValidator.clearPopupInputs();
       openPopupNewCard.open();
-      // openPopupNewCard.setEventListeners()
-      newCardValidator.enableValidation();
     })
   })
   .catch((err) => {
@@ -120,12 +113,7 @@ Promise.all([cardsApi.getInitialCards(), profileApi.getMe()])
   });
 
 //создание валидатора профиля
-const profileValidator = new FormValidator({
-  inputSelector: validationParams.inputSelector,
-  submitButtonSelector: validationParams.submitButtonSelector,
-  inactiveButtonClass: validationParams.inactiveButtonClass,
-  inputErrorClass: validationParams.inputErrorClass,
-  errorClass: validationParams.errorClass}, profileEditForm)
+const profileValidator = new FormValidator(validationParams, profileEditForm)
 
 //создание попапа редактирования профиля
 const openPopupProfile = new PopupWithForm(profileEditPopup,
@@ -143,16 +131,10 @@ profileEditBtn.addEventListener('click', () => {
   nameInput.value = document.querySelector(profileName).textContent;
   descriptionInput.value = document.querySelector(profileDescription).textContent;
   openPopupProfile.open();
-  profileValidator.enableValidation();
 })
 
 //создание валидатора аватарки
-const avatarValidator = new FormValidator({
-  inputSelector: validationParams.inputSelector,
-  submitButtonSelector: validationParams.submitButtonSelector,
-  inactiveButtonClass: validationParams.inactiveButtonClass,
-  inputErrorClass: validationParams.inputErrorClass,
-  errorClass: validationParams.errorClass}, avatarEditForm)
+const avatarValidator = new FormValidator(validationParams, avatarEditForm)
 
 //создание попапа редактирования аватарки
 const openPopupAvatar = new PopupWithForm(avatarEditPopup,
@@ -176,7 +158,13 @@ const openPopupAvatar = new PopupWithForm(avatarEditPopup,
 document.querySelector(profileAvatar).addEventListener('click', () => {
   avatarValidator.clearPopupInputs();
   openPopupAvatar.open();
-  avatarValidator.enableValidation();
 })
 
-
+function enableValidation() {
+  const formList = Array.from(document.querySelectorAll(validationParams.formSelector));
+  formList.forEach((formElement) => {
+    const validator = new FormValidator(validationParams, formElement);
+    validator.enableValidation()
+  });
+}
+enableValidation()
