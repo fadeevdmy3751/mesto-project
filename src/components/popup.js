@@ -26,14 +26,28 @@ export default class Popup {
    */
   close() {
     this.selector.classList.remove('popup_opened');
-    document.removeEventListener('keyup', this._handleEscClose);
-    document.removeEventListener('mousedown', this._handleClosePopup);
+    this._removeCloseListeners();
   };
 
   /**
    * Метод, который добавляет слушатель клика иконке закрытия попапа
    */
   setEventListeners() {
+    this._addCloseListeners();
+  }
+
+  /**
+   * Метод, снимающий обработчики
+   */
+  _removeCloseListeners() {
+    document.removeEventListener('keyup', this._handleEscClose);
+    document.removeEventListener('mousedown', this._handleClosePopup);
+  }
+
+  /**
+   * Метод, вещающий обработчики
+   */
+  _addCloseListeners() {
     document.addEventListener('keyup', this._handleEscClose);
     document.addEventListener('mousedown', this._handleClosePopup);
   }
