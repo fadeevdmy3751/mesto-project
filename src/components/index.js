@@ -88,7 +88,7 @@ Promise.all([cardsApi.getInitialCards(), profileApi.getMe()])
     //создание попапа добавления карточки
     const openPopupNewCard = new PopupWithForm(cardAddPopup,
       (data) => {
-        cardFormButton.textContent = "Сохранение...";
+        openPopupNewCard.renderLoading(true)
         cardsApi.addCardOnServer(data["card-name"], data["card-link"])
           .then((json) => {
             console.log('new card added', json);
@@ -100,7 +100,7 @@ Promise.all([cardsApi.getInitialCards(), profileApi.getMe()])
             console.log(err)
           })
           .finally(() => {
-            cardFormButton.textContent = "Сохранить";
+            openPopupNewCard.renderLoading(false);
           });
       });
 
@@ -120,7 +120,7 @@ const profileValidator = new FormValidator(validationParams, profileEditForm)
 //создание попапа редактирования профиля
 const openPopupProfile = new PopupWithForm(profileEditPopup,
   (data) => {
-    profileFormButton.textContent = "Сохранение...";
+    openPopupProfile.renderLoading(true);
     profileApi.editProfile(data.name, data.profession)
       .then((json) => {
         console.log('profile info updated: ', json);
@@ -131,7 +131,7 @@ const openPopupProfile = new PopupWithForm(profileEditPopup,
         console.log(err)
       })
       .finally(() => {
-        profileFormButton.textContent = "Сохранить";
+        openPopupProfile.renderLoading(false);
       });
   });
 
@@ -150,7 +150,7 @@ const avatarValidator = new FormValidator(validationParams, avatarEditForm)
 //создание попапа редактирования аватарки
 const openPopupAvatar = new PopupWithForm(avatarEditPopup,
   (data) => {
-    avatarFormButton.textContent = "Сохранение...";
+    openPopupAvatar.renderLoading(true);
     avatarApi.editAvatar(data.avatar)
       .then((json) => {
         console.log('avatar updated', json);
@@ -161,7 +161,7 @@ const openPopupAvatar = new PopupWithForm(avatarEditPopup,
         console.log(err)
       })
       .finally(() => {
-        avatarFormButton.textContent = "Сохранить";
+        openPopupAvatar.renderLoading(false);
       });
   });
 
