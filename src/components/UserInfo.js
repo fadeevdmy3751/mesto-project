@@ -51,16 +51,8 @@ export default class UserInfo {
    * Метод, который принимает новые данные пользователя, отправляет их на сервер и добавляет их на страницу
    * @param name - новое имя пользователя;
    * @param about - новое описание пользователя;
-   * @param apiMethod - ссылка на метод класса Api, отправляющий новые данные на сервер.
    */
-  setUserInfo({name, about}, apiMethod) {
-    apiMethod(name, about)
-      .then((json) => {
-        console.log('New profile data: ', json);
-        this.refreshUserInfo(json);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  setUserInfo(name, about) {
+    this.refreshUserInfo({name: name, about: about});
   }
 }
