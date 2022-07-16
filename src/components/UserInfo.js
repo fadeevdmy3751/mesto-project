@@ -21,11 +21,9 @@ export default class UserInfo {
    * Метод, возвращающий объект с данными пользователя
    */
   getUserInfo() {
-    const imgUrl = this._avatarSelector.style.backgroundImage.slice(4, -1).replace(/"/g, "");
     return {
       userName: this._nameSelector.textContent,
       userAbout: this._aboutSelector.textContent,
-      userAvatar: imgUrl
     };
   }
 
