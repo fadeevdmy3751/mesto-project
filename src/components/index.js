@@ -2,11 +2,9 @@
 const content = document.querySelector('.content');
 const avatarEditPopup = document.querySelector('.popup-avatar-edit');
 const avatarEditForm = avatarEditPopup.querySelector('.form[name="popup-avatar-edit-form"]');// уточнить класс или name
-const avatarFormButton = avatarEditForm.querySelector('.form__button');
 const profileEditPopup = document.querySelector('.popup-profile-edit');// уточнить класс
 const profileEditBtn = content.querySelector('.profile__edit-button');
 const profileEditForm = profileEditPopup.querySelector('.form[name="popup-profile-edit-form"]');// уточнить класс или name
-const profileFormButton = profileEditForm.querySelector('.form__button');
 
 const nameInput = profileEditPopup.querySelector('#form__field-name');
 const descriptionInput = profileEditPopup.querySelector('#form__field-profession');
@@ -15,7 +13,6 @@ const cardAddPopup = document.querySelector('.popup-card-add'); // уточни�
 const cardAddBtn = content.querySelector('.profile__add-button');
 const bigImgPopup = document.querySelector('.big-img');
 const cardAddForm = cardAddPopup.querySelector('.form[name="popup-card-add-form"]'); // уточнить класс или name
-const cardFormButton = cardAddForm.querySelector('.form__button');
 
 const profileName = '.profile__name';
 const profileDescription = '.profile__description';
