@@ -1,18 +1,15 @@
 
 const content = document.querySelector('.content');
 const avatarEditPopup = document.querySelector('.popup-avatar-edit');
-const avatarEditForm = avatarEditPopup.querySelector('.form[name="popup-avatar-edit-form"]');// уточнить класс или name
-const profileEditPopup = document.querySelector('.popup-profile-edit');// уточнить класс
+const profileEditPopup = document.querySelector('.popup-profile-edit');
 const profileEditBtn = content.querySelector('.profile__edit-button');
-const profileEditForm = profileEditPopup.querySelector('.form[name="popup-profile-edit-form"]');// уточнить класс или name
 
 const nameInput = profileEditPopup.querySelector('#form__field-name');
 const descriptionInput = profileEditPopup.querySelector('#form__field-profession');
 
-const cardAddPopup = document.querySelector('.popup-card-add'); // уточнить класс
+const cardAddPopup = document.querySelector('.popup-card-add');
 const cardAddBtn = content.querySelector('.profile__add-button');
 const bigImgPopup = document.querySelector('.big-img');
-const cardAddForm = cardAddPopup.querySelector('.form[name="popup-card-add-form"]'); // уточнить класс или name
 
 const profileName = '.profile__name';
 const profileDescription = '.profile__description';
@@ -57,6 +54,21 @@ const myProfile = new UserInfo(
     userAvatarSelector: profileAvatar
   })
 
+  const formValidators = {}
+
+  // Включение валидации
+  const enableValidation = (validationParams) => {
+    const formList = Array.from(document.querySelectorAll(validationParams.formSelector))
+    formList.forEach((formElement) => {
+      const validator = new FormValidator(validationParams, formElement)
+      const formName = formElement.getAttribute('name');
+      formValidators[formName] = validator;
+      validator.enableValidation();
+    });
+  };
+  enableValidation(validationParams);
+
+
 function createCard(item, myProfileInfo) {
   const card = new Card(item, '#card-template', myProfileInfo,
   () => cardPopup.open(item.link, item.name),
@@ -79,9 +91,6 @@ Promise.all([cardsApi.getInitialCards(), profileApi.getMe()])
     cardList.renderItems();
     myProfile.refreshUserInfo({name: myProfileInfo.name, about: myProfileInfo.about, avatar: myProfileInfo.avatar});
 
-    //создание валидатора добавления карточки
-    const newCardValidator = new FormValidator(validationParams, cardAddForm)
-
     //создание попапа добавления карточки
     const openPopupNewCard = new PopupWithForm(cardAddPopup,
       (data) => {
@@ -103,7 +112,7 @@ Promise.all([cardsApi.getInitialCards(), profileApi.getMe()])
 
     //навешивание листенера на кнопку открытия попапа добавления карточки
     cardAddBtn.addEventListener('click', () => {
-      newCardValidator.clearPopupInputs();
+      formValidators['popup-card-add-form'].clearPopupInputs()
       openPopupNewCard.open();
     })
   })
@@ -111,8 +120,6 @@ Promise.all([cardsApi.getInitialCards(), profileApi.getMe()])
     console.log(err);
   });
 
-//создание валидатора профиля
-const profileValidator = new FormValidator(validationParams, profileEditForm)
 
 //создание попапа редактирования профиля
 const openPopupProfile = new PopupWithForm(profileEditPopup,
@@ -134,15 +141,12 @@ const openPopupProfile = new PopupWithForm(profileEditPopup,
 
 //навешивание листенера на кнопку открытия попапа профиля
 profileEditBtn.addEventListener('click', () => {
-  profileValidator.clearPopupInputs();
+  formValidators['popup-profile-edit-form'].clearPopupInputs()
   const userInfo = myProfile.getUserInfo();
   nameInput.value = userInfo.userName;
   descriptionInput.value = userInfo.userAbout;
   openPopupProfile.open();
 })
-
-//создание валидатора аватарки
-const avatarValidator = new FormValidator(validationParams, avatarEditForm)
 
 //создание попапа редактирования аватарки
 const openPopupAvatar = new PopupWithForm(avatarEditPopup,
@@ -164,15 +168,7 @@ const openPopupAvatar = new PopupWithForm(avatarEditPopup,
 
 //навешивание листенера на кнопку открытия попапа аватарки
 document.querySelector(profileAvatar).addEventListener('click', () => {
-  avatarValidator.clearPopupInputs();
+  formValidators['popup-avatar-edit-form'].clearPopupInputs()
   openPopupAvatar.open();
 })
 
-function enableValidation() {
-  const formList = Array.from(document.querySelectorAll(validationParams.formSelector));
-  formList.forEach((formElement) => {
-    const validator = new FormValidator(validationParams, formElement);
-    validator.enableValidation()
-  });
-}
-enableValidation()
