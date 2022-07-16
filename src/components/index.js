@@ -63,8 +63,7 @@ function createCard(item, myProfileInfo) {
   (card) => cardsApi.likeCard(card),
   (card) => cardsApi.deleteCard(card));
 
-  const cardElement = card.generate();
-  return cardElement;
+  return card.generate();
 }
 
 Promise.all([cardsApi.getInitialCards(), profileApi.getMe()])
@@ -119,10 +118,18 @@ const profileValidator = new FormValidator(validationParams, profileEditForm)
 const openPopupProfile = new PopupWithForm(profileEditPopup,
   (data) => {
     profileEditForm.querySelector('.form__button').textContent = "Сохранение...";
-    myProfile.setUserInfo({name: data.name, about: data.profession},
-      (name, about) => profileApi.editProfile(name, about))
-    profileEditForm.querySelector('.form__button').textContent = "Сохранить";
-    openPopupProfile.close();
+    profileApi.editProfile(data.name, data.profession)
+      .then((json) => {
+        console.log('profile info updated: ', json);
+        myProfile.setUserInfo(json.name, json.about);
+        openPopupProfile.close();
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+      .finally(() => {
+        profileEditForm.querySelector('.form__button').textContent = "Сохранить";
+      });
   });
 
 //навешивание листенера на кнопку открытия попапа профиля
